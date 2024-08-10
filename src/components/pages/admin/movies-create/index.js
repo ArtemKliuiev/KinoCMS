@@ -1,0 +1,1 @@
+export { default as MovieCreatePage } from './ui/MovieCreatePage.vue'

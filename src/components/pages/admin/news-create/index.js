@@ -1,0 +1,1 @@
+export { default as NewsCreatePage } from './ui/NewsCreatePage.vue'

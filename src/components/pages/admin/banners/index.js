@@ -1,0 +1,1 @@
+export { default as BannersPage } from './ui/BannersPage.vue'

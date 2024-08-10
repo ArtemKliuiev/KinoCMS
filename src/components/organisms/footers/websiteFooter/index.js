@@ -1,0 +1,1 @@
+export { default as WebsiteFooter } from './ui/WebsiteFooter.vue'

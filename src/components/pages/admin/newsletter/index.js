@@ -1,0 +1,1 @@
+export { default as NewsletterPage } from './ui/NewsletterPage.vue'
