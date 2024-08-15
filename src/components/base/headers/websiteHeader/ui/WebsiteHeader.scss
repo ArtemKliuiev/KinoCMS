@@ -4,13 +4,11 @@
   position: relative;
   z-index: 100;
   width: 100%;
-  padding: 5px 0;
   background-color: $grayTwo;
   border-bottom: 1px solid $light-gray;
 
   @include media-breakpoint-down(md) {
     height: 65px;
-    padding: 0;
   }
 
   &__main {

@@ -130,6 +130,8 @@
     display: flex;
     justify-content: space-between;
     font-size: 0.8em;
+    line-height: 100%;
+    padding-top: 3px;
 
     a {
       transition: opacity 300ms ease;
