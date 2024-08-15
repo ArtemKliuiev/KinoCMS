@@ -1,5 +1,5 @@
 <template>
-
+  StatisticsPage
 </template>
 
 <script setup>

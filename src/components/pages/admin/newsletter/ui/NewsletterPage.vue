@@ -1,5 +1,5 @@
 <template>
-
+  NewsletterPage
 </template>
 
 <script setup>

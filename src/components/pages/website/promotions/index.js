@@ -1,0 +1,1 @@
+export { default as PromotionsPage } from './ui/PromotionsPage.vue'

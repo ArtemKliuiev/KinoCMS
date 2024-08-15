@@ -1,0 +1,43 @@
+@import '@/assets/styles/styles';
+
+.admin-header {
+  height: 60px;
+  position: relative;
+  z-index: 100;
+  width: 100%;
+  padding: 5px 0;
+  background-color: $grayTwo;
+  border-bottom: 1px solid $light-gray;
+  display: flex;
+  align-items: center;
+
+  @include media-breakpoint-down(md) {
+    height: 50px;
+  }
+
+  &__main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__left-block {
+    display: flex;
+    align-items: center;
+  }
+
+  &__burger {
+    margin-right: 15px;
+  }
+
+  &__logo {
+    font-size: 1.6em;
+    font-weight: 700;
+    line-height: 90%;
+    color: $text-color;
+    letter-spacing: 0.1em;
+  }
+
+  &__exit {
+  }
+}

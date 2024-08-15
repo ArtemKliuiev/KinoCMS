@@ -1,5 +1,39 @@
 body {
-  font-family: 'Roboto', sans-serif;
+  position: relative;
+  font-family: Roboto, sans-serif;
   font-size: 16px;
   background: $background-color;
+}
+
+.container {
+  width: 100%;
+  max-width: 1366px;
+  padding: 10px 15px;
+  margin: 0 auto;
+
+  @include media-breakpoint-down(md) {
+    padding: 5px 10px;
+  }
+}
+
+.hover {
+  transition: opacity 300ms ease;
+
+  &:hover {
+    @media (width >= 1024px) {
+      opacity: 0.8;
+    }
+  }
+}
+
+.active {
+  transition: scale 300ms ease;
+
+  &:active {
+    transform: scale(0.99);
+  }
+}
+
+a {
+  color: $text-color;
 }

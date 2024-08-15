@@ -1,0 +1,26 @@
+{
+  "websitePages":{
+    "poster" : "Афіша",
+    "schedule": "Розклад",
+    "soon": "Скоро",
+    "cinemas": "Кінотеатри",
+    "promotions": "Акції",
+    "news": "Новини",
+    "advertisement": "Реклама",
+    "cafe": "Кафе",
+    "application": "Мобільний додаток",
+    "authentication":"Вхід/Реєстрація",
+    "contacts": "Контакти"
+  },
+  "vuetify":{
+    "search" : "Пошук"
+  },
+  "footer": {
+    "appTitle": "Мобільний додаток",
+    "posterTitle": "Афіша",
+    "aboutCinemaTitle": "Про кінотеатр",
+    "socialTitle": "Соціальні мережі",
+    "bottomInfo": "©KinoCMS 2024, All rights reserved",
+    "forAdmin": "Для адміністратора"
+  }
+}

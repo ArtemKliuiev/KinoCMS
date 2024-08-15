@@ -1,0 +1,146 @@
+@import '@/assets/styles/styles';
+
+.header {
+  position: relative;
+  z-index: 100;
+  width: 100%;
+  padding: 5px 0;
+  background-color: $grayTwo;
+  border-bottom: 1px solid $light-gray;
+
+  @include media-breakpoint-down(md) {
+    height: 65px;
+    padding: 0;
+  }
+
+  &__main {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__menu {
+    @include media-breakpoint-down(md) {
+      position: fixed;
+      top: 65px;
+      left: -100%;
+      display: grid;
+      grid-template: auto / 1fr;
+      width: 100%;
+      height: 100%;
+      padding: 50px 0 65px;
+      overflow: auto;
+      background-color: $grayTwo;
+      transition: left 300ms ease;
+    }
+
+    &_active {
+      left: 0;
+    }
+  }
+
+  &__pages {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    @include media-breakpoint-down(md) {
+      display: block;
+    }
+
+    li {
+      cursor: pointer;
+      user-select: none;
+      border-radius: 3px;
+      transition: background-color 300ms ease;
+
+      @include media-breakpoint-down(md) {
+        width: 100%;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      &:hover {
+        @include media-breakpoint-up(md) {
+          background-color: $light-gray;
+        }
+      }
+
+      a {
+        display: block;
+        padding: 5px 15px;
+
+        @include media-breakpoint-down(lg) {
+          padding: 5px 7px;
+        }
+      }
+    }
+  }
+
+  &__logo {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 15px 0 0;
+
+    @include media-breakpoint-down(md) {
+      margin: 0;
+    }
+
+    svg {
+      width: 3em;
+      aspect-ratio: 1/1;
+      margin-right: 5px;
+      fill: $text-color;
+    }
+
+    span {
+      font-size: 1.45em;
+      font-weight: 900;
+      line-height: 90%;
+      color: $text-color;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+
+      @include media-breakpoint-down(md) {
+        display: none;
+      }
+    }
+  }
+
+  &__search {
+    width: 100%;
+    max-width: 400px;
+
+    @include media-breakpoint-down(md) {
+      margin-right: 10px;
+    }
+  }
+
+  &__dropdowns {
+    display: flex;
+    gap: 10px;
+
+    @include media-breakpoint-down(md) {
+      width: 100%;
+    }
+  }
+
+  &__items {
+    width: 100%;
+  }
+
+  &__dropdown {
+    @include media-breakpoint-down(md) {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+}

@@ -1,0 +1,1 @@
+export { default as SoonPage } from './ui/SoonPage.vue'

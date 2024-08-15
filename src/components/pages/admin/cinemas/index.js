@@ -1,1 +1,1 @@
-export { default as CinemasPage } from './ui/CinemasPage.vue'
+export { default as AdminCinemasPage } from './ui/AdminCinemasPage.vue'

@@ -1,0 +1,47 @@
+@import '@/assets/styles/styles';
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;
+  width: 200px;
+  height: 100%;
+  background-color: $grayTwo;
+  overflow: hidden;
+
+  @include media-breakpoint-down(md) {
+    height: calc(100% - 50px);
+    padding: 0;
+    position: fixed;
+    transition: top 300ms ease;
+    top: -100%;
+    justify-content: center;
+    width: 100%;
+  }
+
+  &_active {
+    top: 50px;
+  }
+
+  li {
+    list-style: none;
+  }
+
+  a {
+    display: block;
+    padding: 10px;
+    transition:
+      background-color 300ms ease,
+      color 300ms ease;
+    user-select: none;
+
+    @include media-breakpoint-down(md) {
+      text-align: center;
+    }
+
+    &:hover {
+      color: $text-color;
+      background-color: $light-gray;
+    }
+  }
+}

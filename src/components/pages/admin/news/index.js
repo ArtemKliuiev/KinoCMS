@@ -1,1 +1,1 @@
-export { default as NewsPage } from './ui/NewsPage.vue'
+export { default as AdminNewsPage } from './ui/AdminNewsPage.vue'

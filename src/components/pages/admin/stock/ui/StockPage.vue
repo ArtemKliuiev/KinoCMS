@@ -1,5 +1,5 @@
 <template>
-
+  StockPage
 </template>
 
 <script setup>

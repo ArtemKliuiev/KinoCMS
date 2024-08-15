@@ -1,11 +1,11 @@
-<template>
-  main page
-  <v-btn>regrg</v-btn>
-</template>
-
 <script setup>
 
+
 </script>
+
+<template>
+  MainPage
+</template>
 
 <style lang="scss" scoped>
 @import './MainPage.scss';

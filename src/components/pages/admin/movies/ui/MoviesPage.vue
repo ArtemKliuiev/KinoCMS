@@ -1,5 +1,5 @@
 <template>
-
+  MoviesPage
 </template>
 
 <script setup>

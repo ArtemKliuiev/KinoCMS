@@ -1,0 +1,1 @@
+export { default as СinemasPage } from './ui/СinemasPage.vue'

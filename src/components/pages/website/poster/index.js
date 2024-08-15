@@ -1,0 +1,1 @@
+export { default as PosterPage } from './ui/PosterPage.vue'
