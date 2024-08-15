@@ -3,6 +3,8 @@ import { BaseSvg } from "@/components/base";
 import { UiMenu, UiDropDown, BurgerMenu } from "@/components/ui";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
+//composible для localstorage
+//RouterLink переделать на BaseButtonText
 
 const burger = ref(false)
 const { t, locale } = useI18n({ useScope: 'global' })
