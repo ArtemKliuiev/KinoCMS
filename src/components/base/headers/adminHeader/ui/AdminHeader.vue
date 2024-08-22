@@ -1,14 +1,21 @@
 <script setup>
 import { BurgerMenu } from "@/components/ui";
-import { ref } from "vue";
+import { onMounted, ref, watch } from "vue";
+import { BaseButtonText } from "@/components/base";
 
 const props = defineProps(['active'])
 const emit = defineEmits(['close'])
 
-function burgerBtn() {
-  emit('close', !props.active)
-}
+function burgerClick() {
+  const { lockScroll, unlockScroll } = useScrollLock()
 
+  emit('close', !props.active)
+  if (!props.active) {
+    lockScroll()
+  } else {
+    unlockScroll()
+  }
+}
 </script>
 
 <template>
@@ -17,10 +24,10 @@ function burgerBtn() {
       <div class="admin-header__main">
         <div class="admin-header__left-block">
           <div class="admin-header__burger">
-            <BurgerMenu showDesktop="true" @click="burgerBtn()" :open="active" />
+            <BurgerMenu showDesktop="true" @click="burgerClick()" :open="active" />
           </div>
 
-          <RouterLink class="admin-header__logo" to="/">KinoCMS</RouterLink>
+          <BaseButtonText class="admin-header__logo" to="/">KinoCMS</BaseButtonText>
         </div>
 
         <div class="admin-header__right-block admin-header__exit">

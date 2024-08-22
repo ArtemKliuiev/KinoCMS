@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { adminPages } from "@/components/composable";
-import { computed } from "vue";
+import { adminPages } from "@/components/mixins";
+import { BaseButtonText } from "@/components/base";
 
 const props = defineProps(['active'])
 const emit = defineEmits(['close'])
@@ -11,10 +11,10 @@ const emit = defineEmits(['close'])
 <template>
   <nav class="navigation" :class="{ navigation_active: active }">
 
-    <ul>
+    <ul class="navigation__list">
       <li v-for="item in adminPages" :key="item">
-        <router-link @click="emit('close', false)" :to="item.path">{{ item.title
-          }}</router-link>
+        <BaseButtonText @click="emit('close', false)" :to="item.path">{{ item.title
+          }}</BaseButtonText>
       </li>
     </ul>
   </nav>

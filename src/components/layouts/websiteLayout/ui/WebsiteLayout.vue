@@ -5,18 +5,21 @@ import { WebsiteHeader, WebsiteFooter } from '@/components/base'
 <template>
   <div class="site-layout">
     <slot name="header">
-      <WebsiteHeader />
+      <div class="site-layout__header">
+        <WebsiteHeader />
+      </div>
+
     </slot>
 
     <slot name="main">
-      <main class="main">
+      <main class="site-layout__main main">
         <div class="container">
           <router-view />
         </div>
       </main>
     </slot>
 
-    <slot name="footer">
+    <slot name="site-layout__footer">
       <WebsiteFooter />
     </slot>
   </div>

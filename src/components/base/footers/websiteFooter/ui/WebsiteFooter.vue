@@ -1,7 +1,6 @@
 <script setup>
-import { useI18n } from "vue-i18n";
+import { BaseButtonText } from "@/components/base";
 
-const { t } = useI18n({ useScope: 'global' })
 </script>
 
 <template>
@@ -28,10 +27,10 @@ const { t } = useI18n({ useScope: 'global' })
           <h3>{{ $t('footer.posterTitle') }}</h3>
 
           <div class="footer__links">
-            <RouterLink to="/schedule">{{ $t('websitePages.schedule') }}</RouterLink>
-            <RouterLink to="/soon">{{ $t('websitePages.soon') }}</RouterLink>
-            <RouterLink to="/cinemas">{{ $t('websitePages.cinemas') }}</RouterLink>
-            <RouterLink to="/promotions">{{ $t('websitePages.promotions') }}</RouterLink>
+            <BaseButtonText to="/schedule">{{ $t('websitePages.schedule') }}</BaseButtonText>
+            <BaseButtonText to="/soon">{{ $t('websitePages.soon') }}</BaseButtonText>
+            <BaseButtonText to="/cinemas">{{ $t('websitePages.cinemas') }}</BaseButtonText>
+            <BaseButtonText to="/promotions">{{ $t('websitePages.promotions') }}</BaseButtonText>
           </div>
         </div>
 
@@ -39,10 +38,10 @@ const { t } = useI18n({ useScope: 'global' })
           <h3>{{ $t('footer.aboutCinemaTitle') }}</h3>
 
           <div class="footer__links">
-            <RouterLink to="/news">{{ $t('websitePages.news') }}</RouterLink>
-            <RouterLink to="/advertisement">{{ $t('websitePages.advertisement') }}</RouterLink>
-            <RouterLink to="/cafe">{{ $t('websitePages.cafe') }}</RouterLink>
-            <RouterLink to="/">{{ $t('websitePages.contacts') }}</RouterLink>
+            <BaseButtonText to="/news">{{ $t('websitePages.news') }}</BaseButtonText>
+            <BaseButtonText to="/advertisement">{{ $t('websitePages.advertisement') }}</BaseButtonText>
+            <BaseButtonText to="/cafe">{{ $t('websitePages.cafe') }}</BaseButtonText>
+            <BaseButtonText to="/">{{ $t('websitePages.contacts') }}</BaseButtonText>
           </div>
         </div>
 
@@ -77,7 +76,7 @@ const { t } = useI18n({ useScope: 'global' })
       <div class="footer__bottom-line">
         <p>{{ $t('footer.bottomInfo') }}</p>
 
-        <RouterLink to="/admin/statistics">{{ $t('footer.forAdmin') }}</RouterLink>
+        <BaseButtonText to="/admin/statistics">{{ $t('footer.forAdmin') }}</BaseButtonText>
       </div>
     </div>
   </footer>

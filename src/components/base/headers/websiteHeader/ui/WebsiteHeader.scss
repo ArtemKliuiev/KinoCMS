@@ -58,6 +58,9 @@
       user-select: none;
       border-radius: 3px;
       transition: background-color 300ms ease;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
 
       @include media-breakpoint-down(md) {
         width: 100%;

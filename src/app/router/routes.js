@@ -29,6 +29,7 @@ import {
   SchedulePage,
   SoonPage,
   СinemasPage,
+  ProfilePage,
   PromotionsPage,
   NewsPage,
   AdvertisementPage,
@@ -129,6 +130,14 @@ export const routes = [
     path: '/application',
     name: 'application',
     component: ApplicationPage,
+    meta: {
+      layout: WebsiteLayout
+    }, 
+  },
+  { 
+    path: '/profile',
+    name: 'profile',
+    component: ProfilePage,
     meta: {
       layout: WebsiteLayout
     }, 

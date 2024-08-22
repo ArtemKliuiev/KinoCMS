@@ -10,16 +10,18 @@ const burger = ref(false)
 <template>
   <div class="admin-layout">
     <slot name="header">
-      <AdminHeader :active="burger" @close="(e) => burger = e" />
+      <div class="admin-layout__header">
+        <AdminHeader :active="burger" @close="(e) => burger = e" />
+      </div>
     </slot>
 
     <slot name="main">
-      <main class="main">
-        <nav class="main__navigation">
+      <main class="admin-layout__main">
+        <nav class="admin-layout__main-navigation">
           <AdminNavigation :active="burger" @close="(e) => burger = e" />
         </nav>
 
-        <div class="main__page">
+        <div class="admin-layout__main-page">
           <div class="container">
             <router-view />
           </div>

@@ -1,0 +1,1 @@
+export { default as BaseButtonText } from './ui/BaseButtonText.vue'

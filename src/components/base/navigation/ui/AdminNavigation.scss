@@ -19,6 +19,16 @@
     width: 100%;
   }
 
+  &__list {
+    position: fixed;
+    width: 200px;
+
+    @include media-breakpoint-down(md) {
+      position: static;
+      width: 100%;
+    }
+  }
+
   &_active {
     top: 50px;
   }
@@ -40,8 +50,10 @@
     }
 
     &:hover {
-      color: $text-color;
-      background-color: $light-gray;
+      @include media-breakpoint-up(md) {
+        color: $text-color;
+        background-color: $light-gray;
+      }
     }
   }
 }

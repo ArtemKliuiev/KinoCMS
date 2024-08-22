@@ -1,19 +1,71 @@
 <script setup>
 import { BaseSvg } from "@/components/base";
-import { UiMenu, UiDropDown, BurgerMenu } from "@/components/ui";
-import { ref } from "vue";
+import { UiDropDown, BurgerMenu } from "@/components/ui";
+import { onMounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-//composible для localstorage
-//RouterLink переделать на BaseButtonText
+import { useScrollLock } from "@/components/composable";
+import { useRoute, useRouter } from 'vue-router';
+import { useUrlQuery } from "@/components/composable";
+import { BaseButtonText } from "@/components/base";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
+
+const auth = getAuth();
+const { setQueryParam } = useUrlQuery()
+const route = useRoute();
+const router = useRouter()
 const burger = ref(false)
 const { t, locale } = useI18n({ useScope: 'global' })
 const dropdownTitle = locale.value
+const currentUser = ref('')
+
+onMounted(() => {
+  checkAuth()
+})
+
+function checkAuth() {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      currentUser.value = user.email
+      console.log(user.email)
+    } else {
+      currentUser.value = ''
+      console.log('Користувач не авторизований')
+    }
+  });
+}
 
 function changeLang(e) {
-  locale.value = e
-  localStorage.setItem('lang', locale.value)
+  let lang = e
+  if (e === 'ua') {
+    lang = 'uk'
+  }
+  locale.value = lang
+  // router.replace({ query: { lang: lang } })
+  setQueryParam("lang", lang)
 }
+
+function burgerChange(close) {
+  const { lockScroll, unlockScroll } = useScrollLock()
+
+  if (close) {
+    burger.value = !burger.value
+  } else {
+    burger.value = false
+  }
+
+  if (burger.value) {
+    lockScroll()
+  } else {
+    unlockScroll()
+  }
+}
+
+watch(() => route.path, () => {
+  const { unlockScroll } = useScrollLock()
+  unlockScroll()
+});
+
 
 </script>
 
@@ -22,11 +74,11 @@ function changeLang(e) {
     <div class="container">
       <div class="header__main">
         <div class="header__row">
-          <RouterLink class="header__logo hover active" to="/">
+          <BaseButtonText @click="burgerChange(false)" class="header__logo hover active" to="/">
             <BaseSvg id="logo" />
 
             <span>Kino <br> CMS</span>
-          </RouterLink>
+          </BaseButtonText>
 
           <div class="header__search">
             <v-autocomplete hide-details="true" :label="t('vuetify.search')"
@@ -34,54 +86,58 @@ function changeLang(e) {
             </v-autocomplete>
           </div>
 
-          <BurgerMenu showDesktop="true" @click="burger = !burger" :open="burger" />
+          <BurgerMenu showDesktop="true" @click="burgerChange" :open="burger" />
         </div>
 
         <div class="header__row header__menu" :class="{ header__menu_active: burger }">
           <ul class="header__pages">
             <li>
-              <RouterLink @click="burger = !burger" to="/poster"> {{ $t('websitePages.poster') }}</RouterLink>
+              <BaseButtonText @click="burgerChange" to="/poster"> {{ $t('websitePages.poster') }}</BaseButtonText>
             </li>
 
             <li>
-              <RouterLink @click="burger = !burger" to="/schedule"> {{ $t('websitePages.schedule') }}</RouterLink>
+              <BaseButtonText @click="burgerChange" to="/schedule"> {{ $t('websitePages.schedule') }}</BaseButtonText>
             </li>
 
             <li>
-              <RouterLink @click="burger = !burger" to="/soon"> {{ $t('websitePages.soon') }}</RouterLink>
+              <BaseButtonText @click="burgerChange" to="/soon"> {{ $t('websitePages.soon') }}</BaseButtonText>
             </li>
 
             <li>
-              <RouterLink @click="burger = !burger" to="/cinemas"> {{ $t('websitePages.cinemas') }}</RouterLink>
+              <BaseButtonText @click="burgerChange" to="/cinemas"> {{ $t('websitePages.cinemas') }}</BaseButtonText>
             </li>
 
             <li>
-              <RouterLink @click="burger = !burger" to="/promotions"> {{ $t('websitePages.promotions') }}</RouterLink>
+              <BaseButtonText @click="burgerChange" to="/promotions"> {{ $t('websitePages.promotions') }}
+              </BaseButtonText>
             </li>
 
             <li>
-              <RouterLink @click="burger = !burger" to="/news"> {{ $t('websitePages.news') }}</RouterLink>
+              <BaseButtonText @click="burgerChange" to="/news"> {{ $t('websitePages.news') }}</BaseButtonText>
             </li>
 
             <li>
-              <RouterLink @click="burger = !burger" to="/advertisement"> {{ $t('websitePages.advertisement') }}
-              </RouterLink>
+              <BaseButtonText @click="burgerChange" to="/advertisement"> {{ $t('websitePages.advertisement') }}
+              </BaseButtonText>
             </li>
 
             <li>
-              <RouterLink @click="burger = !burger" to="/cafe"> {{ $t('websitePages.cafe') }}</RouterLink>
+              <BaseButtonText @click="burgerChange" to="/cafe"> {{ $t('websitePages.cafe') }}</BaseButtonText>
             </li>
 
             <li>
-              <RouterLink @click="burger = !burger" to="/application"> {{ $t('websitePages.application') }}</RouterLink>
+              <BaseButtonText @click="burgerChange" to="/application"> {{ $t('websitePages.application') }}
+              </BaseButtonText>
             </li>
 
             <li>
-              <RouterLink @click="burger = !burger" to="/authentication"> {{ $t('websitePages.authentication') }}
-              </RouterLink>
+              <BaseButtonText v-if="currentUser.length === 0" @click="burgerChange" to="/authentication"> {{
+                $t('websitePages.authentication') }}
+              </BaseButtonText>
+
+              <BaseButtonText v-else @click="burgerChange" to="/profile"> {{ $t('websitePages.profile') }}
+              </BaseButtonText>
             </li>
-
-
           </ul>
 
           <div class="header__dropdown">

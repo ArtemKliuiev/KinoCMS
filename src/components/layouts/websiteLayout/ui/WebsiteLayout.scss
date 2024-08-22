@@ -1,17 +1,26 @@
+@import '@/assets/styles/styles';
+
 .site-layout {
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: 1fr auto;
   min-height: 100vh;
 
-  .header {
+  &__header {
+    position: fixed;
+    z-index: 100;
+    width: 100%;
+  }
+
+  &__main {
+    margin-top: 117px;
     grid-row: 1;
+
+    @include media-breakpoint-down(md) {
+      margin-top: 65px;
+    }
   }
 
-  .main {
+  &__footer {
     grid-row: 2;
-  }
-
-  .footer {
-    grid-row: 3;
   }
 }
