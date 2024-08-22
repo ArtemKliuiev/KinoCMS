@@ -78,7 +78,7 @@ async function submitForm() {
   if (formValid.value) {
     const successSend = await registration()
     if (successSend) {
-      router.push('/')
+      router.push('/profile')
     }
   }
 }

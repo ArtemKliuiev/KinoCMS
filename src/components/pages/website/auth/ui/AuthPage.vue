@@ -7,8 +7,8 @@ import { useI18n } from "vue-i18n";
 
 const { t } = useI18n({ useScope: 'global' })
 const router = useRouter()
-const email = ref('');
-const password = ref('');
+const email = ref('artem.klu@gamil.com');
+const password = ref('artem1999');
 const formValid = ref(false);
 
 async function signIn() {
