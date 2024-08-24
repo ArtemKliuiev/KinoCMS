@@ -399,8 +399,8 @@ function submitFormSingIn() {
 
   </v-dialog>
 
-  <v-snackbar timeout="1500" class="d-flex justify-end pa-5" color="#424242" v-model="snackbar">
-    <div class="profile__snackbar">
+  <v-snackbar multi-line timeout="1500" class="profile__snackbar" color="#424242" v-model="snackbar">
+    <div class="profile__snackbar-text">
       {{ $t('pages.profile.snackbar.text') }}
     </div>
   </v-snackbar>

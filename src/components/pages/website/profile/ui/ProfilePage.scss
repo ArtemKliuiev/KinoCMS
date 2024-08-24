@@ -45,7 +45,15 @@
   }
 
   &__snackbar{
-    text-align: center;
+    @include media-breakpoint-up(sm) {
+      display: flex;
+      justify-content: flex-end;
+      padding: 5px;
+    }
+
+    &-text{
+      text-align: center;
+    }
   }
 }
 
