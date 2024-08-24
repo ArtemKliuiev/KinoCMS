@@ -3,6 +3,7 @@ import { getAuth, reauthenticateWithCredential, EmailAuthProvider } from "fireba
 export async function refreshSign(email, password) {
     const auth = getAuth();
     const user = auth.currentUser;
+    let result = null
 
     if (!user) {
         throw new Error('Пользователь не найден.');
@@ -11,10 +12,12 @@ export async function refreshSign(email, password) {
     try {
         const credential = EmailAuthProvider.credential(email, password);
 
-        await reauthenticateWithCredential(user, credential);
+        result = await reauthenticateWithCredential(user, credential);
         console.log('Пользователь успешно повторно аутентифицирован.');
 
     } catch (error) {
         throw error;
     }
+
+    return result
 }

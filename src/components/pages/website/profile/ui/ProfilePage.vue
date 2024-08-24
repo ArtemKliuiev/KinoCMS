@@ -1,24 +1,26 @@
 <script setup>
-import { computed, reactive, ref } from 'vue'
-import { BaseButtonText } from "@/components/base/index.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile, updateEmail, EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
-import { doc, setDoc, getDoc } from "firebase/firestore";
-import { db, getUser } from "@/components/mixins"
+import { computed, ref, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router';
 import { useI18n } from "vue-i18n";
+import { getAuth, signOut,updatePassword,  updateProfile, updateEmail} from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import {validationRules, changeDateFormat, db, getUser, areObjectsEqual, refreshSign} from "@/components/mixins";
 import { useScrollLock } from "@/components/composable";
-import { watch } from "vue";
-import { onMounted } from "vue";
-import { areObjectsEqual } from "@/components/mixins";
-import { refreshSign } from "@/components/mixins";
 
-
-let mainFirebaseData = {}
-let contactsFirebaseData = {}
 const { t } = useI18n({ useScope: 'global' })
 const router = useRouter()
-
 const auth = getAuth();
+const mainDataFormValid = ref(false);
+const contactsDataFormValid = ref(false);
+const signValid = ref(false);
+const singDialog = ref(false)
+const dateDialog = ref(false)
+const bottomSheet = ref(false)
+const snackbar = ref(false)
+const date = ref(new Date())
+const curDate = changeDateFormat(new Date())
+let mainFirebaseData = {}
+let contactsFirebaseData = {}
 
 const mainFormData = ref({
   name: '',
@@ -30,52 +32,23 @@ const mainFormData = ref({
   city: '',
   birthday: ''
 })
-
 const contactsData = ref({
   email: '',
   spareEmail: '',
-  phone: '',
   password: '',
   nextPassword: ''
 })
-
 const signForm = ref({
   email: '',
   password: '',
 })
-
-const email = ref('');
-const password = ref('');
-const mainDataFormValid = ref(false);
-const contactsDataFormValid = ref(false);
-const signValid = ref(false);
-const singDialog = ref(false)
-const dateDialog = ref(false)
-const bottomSheet = ref(false)
-const date = ref(new Date())
-const curDate = changeDateFormat(new Date())
 
 onMounted(() => {
   getMainFormData()
   getContactsFormData()
 })
 
-watch(dateDialog, () => {
-  scrollLock(dateDialog.value)
-})
-
-watch(singDialog, () => {
-  scrollLock(singDialog.value)
-})
-
-watch(bottomSheet, () => {
-  scrollLock(bottomSheet.value)
-})
-
-watch(date, () => {
-  dateDialog.value = false
-})
-
+const rules = computed(() => validationRules(t, contactsData.value.password));
 const dateFormat = computed(() => {
   const newDate = changeDateFormat(date.value)
 
@@ -84,6 +57,23 @@ const dateFormat = computed(() => {
     return newDate
   }
   return ''
+})
+
+watch(dateDialog, () => {
+  scrollLock(dateDialog.value)
+})
+
+watch(singDialog, () => {
+  scrollLock(singDialog.value)
+  cleanSignForm()
+})
+
+watch(bottomSheet, () => {
+  scrollLock(bottomSheet.value)
+})
+
+watch(date, () => {
+  dateDialog.value = false
 })
 
 function scrollLock(boolean) {
@@ -96,34 +86,39 @@ function scrollLock(boolean) {
   }
 }
 
-function changeDateFormat(date) {
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-
-  const formattedDay = day < 10 ? '0' + day : day;
-  const formattedMonth = month < 10 ? '0' + month : month;
-
-  return `${formattedMonth}-${formattedDay}-${year}`;
-}
-
 async function getMainFormData() {
   const user = await getUser()
   const docRef = doc(db, "users", user.uid);
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
-    mainFormData.value = docSnap.data()
-    mainFirebaseData = docSnap.data()
-    contactsData.value.spareEmail = docSnap.data().spareEmail
-    contactsFirebaseData.spareEmail = docSnap.data().spareEmail
-    mainFormData.value.name = user.displayName
-    date.value = new Date(mainFirebaseData.birthday)
+    const data = docSnap.data().mainFormData
+
+    if(data){
+      mainFormData.value = data
+      mainFirebaseData = docSnap.data().mainFormData
+
+      if(mainFirebaseData.birthday !== ''){
+        date.value = new Date(mainFirebaseData.birthday)
+      }
+    }
   }
+
+  mainFormData.value.name = user.displayName
 }
 
 async function getContactsFormData() {
   const user = await getUser()
+  const docRef = doc(db, "users", user.uid);
+  const docSnap = await getDoc(docRef);
+
+  cleanContactsForm()
+
+  if(docSnap.data().contactsFormData?.spareEmail){
+    contactsData.value.spareEmail = docSnap.data().contactsFormData.spareEmail
+    contactsFirebaseData.spareEmail = docSnap.data().contactsFormData.spareEmail
+  }
+
   if (user) {
     contactsData.value.email = user.email
     contactsFirebaseData.email = user.email
@@ -131,9 +126,6 @@ async function getContactsFormData() {
 }
 
 async function updateMainFormData() {
-
-  console.log(mainFirebaseData)
-
   if (!areObjectsEqual(mainFirebaseData, mainFormData.value)) {
     const confirmed = confirm(t('pages.profile.changeData'));
 
@@ -144,18 +136,24 @@ async function updateMainFormData() {
         })
       }
       const user = await getUser()
-      await setDoc(doc(db, "users", user.uid), mainFormData.value);
+
+      await setDoc(doc(db, "users", user.uid), {
+        mainFormData: mainFormData.value
+      }, { merge: true });
+
       await getMainFormData()
     }
   } else {
     bottomSheet.value = true
   }
+
+  snackbar.value = true
 }
 
 async function updateContactsData() {
+  singDialog.value = false
   const user = await getUser()
   const userEmail = user.email
-  const userPhone = user.phoneNumber
 
   if (userEmail !== contactsData.value.email) {
     updateEmail(auth.currentUser, contactsData.value.email).then(() => {
@@ -165,29 +163,66 @@ async function updateContactsData() {
     });
   }
 
-  if (userPhone !== contactsData.value.phone) {
-    console.log("Телефон был изменина")
+  if(contactsData.value.spareEmail !== contactsFirebaseData.spareEmail){
+    await setDoc(doc(db, "users", user.uid), {
+      contactsFormData: {
+        spareEmail: contactsData.value.spareEmail
+      }
+    }, { merge: true });
   }
 
+  if(contactsData.value.password.length !== 0){
+    const user = auth.currentUser;
+    const newPassword = contactsData.value.password;
+
+    updatePassword(user, newPassword).then(() => {
+    }).catch((error) => {
+      console.error(error)
+    });
+  }
+
+  snackbar.value = true
+
+  await getContactsFormData()
 }
 
 function checkSignIn() {
-  refreshSign(signForm.value.email, signForm.value.password)
+   refreshSign(signForm.value.email, signForm.value.password)
     .then(() => {
       updateContactsData()
     })
     .catch(error => {
-      if (error.code === 'auth/invalid-credential') {
-        alert('Невірний логін або пароль')
-
-        signForm.value.email = ''
-        signForm.value.password = ''
+      if (
+          error.code === 'auth/invalid-credential' ||
+          error.code === 'auth/wrong-password' ||
+          error.code === 'auth/missing-password' ||
+          error.code === 'auth/user-mismatch'
+      ) {
+        alert(t('pages.profile.alert.wrongLogin'))
+      }else {
+        alert(t('pages.profile.alert.errorLogin'))
       }
     });
 }
 
+function cleanSignForm(){
+  signForm.value = {
+    email: '',
+    password: ''
+  }
+}
+
+function cleanContactsForm(){
+  contactsData.value = {
+    email: '',
+    spareEmail: '',
+    password: '',
+    nextPassword: ''
+  }
+}
+
 function exitAccount() {
-  if (confirm(t('pages.profile.alert'))) {
+  if (confirm(t('pages.profile.alert.exit'))) {
     const auth = getAuth();
     signOut(auth).then(() => {
       router.push('/authentication')
@@ -223,54 +258,6 @@ function submitFormSingIn() {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////
-
-const mainDataRules = {
-  name: [
-    value => value.length >= 3 || value.length === 0 || t('pages.profile.errors.name.one'),
-    value => value.length <= 20 || t('pages.profile.errors.name.two'),
-    value => /^[a-zа-яїєі]*$/i.test(value) || t('pages.profile.errors.name.three')
-  ],
-  phone: [
-    value => {
-      if (!value) return true;
-      return /^(0\d{9}|380\d{9})$/.test(value) || t('pages.profile.errors.phone.one');
-    }
-  ],
-  address: [
-    value => value.length >= 3 || value.length === 0 || t('pages.profile.errors.address.one'),
-    value => value.length <= 30 || t('pages.profile.errors.address.two'),
-    value => /^[\s\wa-zа-яїєі.,/-]*$/i.test(value) || t('pages.profile.errors.address.three')
-  ]
-};
-
-const contactsRules = {
-  email: [
-    value => !!value || t('pages.profile.errors.email.one'),
-    value => /^[\w.-]{3,20}@[\wа-яіїє.-]{3,20}\.[a-z]{2,10}$/i.test(value) || t('pages.profile.errors.email.two')
-  ],
-  spareEmail: [
-    value => {
-      if (!value) return true;
-      return /^[\w.-]{3,20}@[\wа-яіїє.-]{3,20}\.[a-z]{2,10}$/i.test(value) || t('pages.profile.errors.email.two')
-    }
-  ],
-  password: [
-    value => {
-      if (value.length === 0) return true;
-      return (value.length >= 6 && value.length <= 20) || t('pages.profile.errors.password.one');
-    },
-    value => /^[\w.]*$/i.test(value) || t('pages.profile.errors.password.three')
-  ],
-  nextPassword: [
-    value => {
-      if (!contactsData.value.password) return true; // Если исходный пароль пустой
-      return value.length > 0 || t('pages.profile.errors.nextPassword.one');
-    },
-    value => value === contactsData.value.password || t('pages.profile.errors.nextPassword.two')
-  ]
-};
-
 </script>
 
 <template>
@@ -287,31 +274,31 @@ const contactsRules = {
 
               <v-row>
                 <v-col cols="12" md="6">
-                  <v-text-field v-model="mainFormData.name" :rules="mainDataRules.name"
+                  <v-text-field v-model="mainFormData.name" :rules="rules.name"
                     :label="$t('pages.profile.form.name')" required variant="solo-filled"></v-text-field>
                 </v-col>
 
                 <v-col cols="12" md="6">
-                  <v-text-field v-model="mainFormData.lastName" :rules="mainDataRules.name"
+                  <v-text-field v-model="mainFormData.lastName" :rules="rules.name"
                     :label="$t('pages.profile.form.lastName')" required variant="solo-filled"></v-text-field>
                 </v-col>
               </v-row>
 
               <v-row>
                 <v-col cols="12" md="6">
-                  <v-text-field v-model="mainFormData.nickName" :rules="mainDataRules.name"
+                  <v-text-field v-model="mainFormData.nickName" :rules="rules.name"
                     :label="$t('pages.profile.form.nickName')" required variant="solo-filled"></v-text-field>
                 </v-col>
 
                 <v-col cols="12" md="6">
-                  <v-text-field v-model="mainFormData.phone" :rules="mainDataRules.phone"
+                  <v-text-field v-model="mainFormData.phone" :rules="rules.phone"
                     :label="$t('pages.profile.form.phone')" required variant="solo-filled"></v-text-field>
                 </v-col>
               </v-row>
 
               <v-row>
                 <v-col cols=" 12" md="6">
-                  <v-text-field v-model="mainFormData.address" :rules="mainDataRules.address"
+                  <v-text-field v-model="mainFormData.address" :rules="rules.address"
                     :label="$t('pages.profile.form.address')" required variant="solo-filled"></v-text-field>
                 </v-col>
 
@@ -353,25 +340,25 @@ const contactsRules = {
 
               <v-row>
                 <v-col cols=" 12" md="6">
-                  <v-text-field v-model="contactsData.email" :rules="contactsRules.email"
+                  <v-text-field v-model="contactsData.email" :rules="rules.email"
                     :label="$t('pages.profile.form.email')" variant="solo-filled"></v-text-field>
                 </v-col>
 
                 <v-col cols=" 12" md="6">
-                  <v-text-field v-model="contactsData.spareEmail" :rules="contactsRules.spareEmail"
+                  <v-text-field v-model="contactsData.spareEmail" :rules="rules.spareEmail"
                     :label="$t('pages.profile.form.spareEmail')" variant="solo-filled"></v-text-field>
                 </v-col>
               </v-row>
 
               <v-row>
                 <v-col cols="12" md="6">
-                  <v-text-field v-model="contactsData.password" type="password" :rules="contactsRules.password"
+                  <v-text-field v-model="contactsData.password" type="password" :rules="rules.password"
                     :label="$t('pages.profile.form.password')" variant="solo-filled">
                   </v-text-field>
                 </v-col>
 
                 <v-col cols="12" md="6">
-                  <v-text-field v-model="contactsData.nextPassword" type="password" :rules="contactsRules.nextPassword"
+                  <v-text-field v-model="contactsData.nextPassword" type="password" :rules="rules.nextPassword"
                     :label="$t('pages.profile.form.nextPassword')" variant="solo-filled">
                   </v-text-field>
                 </v-col>
@@ -379,7 +366,7 @@ const contactsRules = {
 
               <v-btn color="#2a2a2a" class="mt-5" type="submit" block>{{ $t('pages.profile.saveBtn') }}</v-btn>
 
-              <v-btn color="#d32f2f" @click="exitAccount" class="mt-5" type="submit" block>{{
+              <v-btn color="#d32f2f" @click="exitAccount" class="mt-5"  block>{{
                 $t('pages.profile.exitBtn') }}</v-btn>
             </v-container>
           </v-form>
@@ -389,7 +376,7 @@ const contactsRules = {
   </div>
 
   <v-dialog v-model="dateDialog" width="auto">
-    <v-date-picker v-model="date"></v-date-picker>
+    <v-date-picker :max="curDate" v-model="date"></v-date-picker>
   </v-dialog>
 
   <v-dialog v-model="singDialog" width="auto">
@@ -399,18 +386,24 @@ const contactsRules = {
         <v-form v-model="signValid" fast-fail @submit.prevent="submitFormSingIn">
           <h3> {{ $t('pages.profile.signTitle') }}</h3>
 
-          <v-text-field class="mb-4" variant="solo-filled" v-model="signForm.email" :rules="contactsRules.email"
+          <v-text-field class="mb-4" variant="solo-filled" v-model="signForm.email" :rules="rules.email"
             :label="$t('pages.auth.email')"></v-text-field>
 
           <v-text-field class="mb-4" type="password" variant="solo-filled" v-model="signForm.password"
-            :rules="contactsRules.password" :label="$t('pages.auth.password')"></v-text-field>
+            :rules="rules.necessarilyPassword" :label="$t('pages.auth.password')"></v-text-field>
 
-          <v-btn color="#2a2a2a" class="mt-2" type="submit" block>{{ $t('pages.auth.authBtn') }}</v-btn>
+          <v-btn color="#2a2a2a" class="mt-2" type="submit" block>{{ $t('pages.profile.saveBtn') }}</v-btn>
         </v-form>
       </v-sheet>
     </div>
 
   </v-dialog>
+
+  <v-snackbar timeout="1500" class="d-flex justify-end pa-5" color="#424242" v-model="snackbar">
+    <div class="profile__snackbar">
+      {{ $t('pages.profile.snackbar.text') }}
+    </div>
+  </v-snackbar>
 
   <v-bottom-sheet v-model="bottomSheet">
     <v-card :title="$t('pages.profile.bottomSheet.title')" :text="$t('pages.profile.bottomSheet.text')"></v-card>
