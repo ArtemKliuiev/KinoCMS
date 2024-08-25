@@ -38,115 +38,115 @@ import {
 } from "@/components/pages/website"
 
 export const routes = [
-  { 
-    path: '/',
+  {
+    path: '/:locale?',
     name: 'main',
     component: MainPage,
     meta: {
       layout: WebsiteLayout
-    }, 
+    },
   },
-  { 
-    path: '/authentication',
+  {
+    path: '/authentication/:locale?',
     name: 'authentication',
     component: AuthPage,
     meta: {
       layout: WebsiteLayout
-    }, 
+    },
   },
-  { 
-    path: '/registration',
+  {
+    path: '/registration/:locale?',
     name: 'registration',
     component: RegistrationPage,
     meta: {
       layout: WebsiteLayout
-    }, 
+    },
   },
-  { 
-    path: '/poster',
+  {
+    path: '/poster/:locale?',
     name: 'poster',
     component: PosterPage,
     meta: {
       layout: WebsiteLayout
-    }, 
+    },
   },
-  { 
-    path: '/schedule',
+  {
+    path: '/schedule/:locale?',
     name: 'schedule',
     component: SchedulePage,
     meta: {
       layout: WebsiteLayout
-    }, 
+    },
   },
-  { 
-    path: '/soon',
+  {
+    path: '/soon/:locale?',
     name: 'soon',
     component: SoonPage,
     meta: {
       layout: WebsiteLayout
-    }, 
+    },
   },
-  { 
-    path: '/cinemas',
+  {
+    path: '/cinemas/:locale?',
     name: 'cinemas',
     component: СinemasPage,
     meta: {
       layout: WebsiteLayout
-    }, 
+    },
   },
-  { 
-    path: '/promotions',
+  {
+    path: '/promotions/:locale?',
     name: 'promotions',
     component: PromotionsPage,
     meta: {
       layout: WebsiteLayout
-    }, 
+    },
   },
-  { 
-    path: '/news',
+  {
+    path: '/news/:locale?',
     name: 'news',
     component: NewsPage,
     meta: {
       layout: WebsiteLayout
-    }, 
+    },
   },
-  { 
-    path: '/advertisement',
+  {
+    path: '/advertisement/:locale?',
     name: 'advertisement',
     component: AdvertisementPage,
     meta: {
       layout: WebsiteLayout
-    }, 
+    },
   },
-  { 
-    path: '/cafe',
+  {
+    path: '/cafe/:locale?',
     name: 'cafe',
     component: CafePage,
     meta: {
       layout: WebsiteLayout
-    }, 
+    },
   },
-    { 
-    path: '/application',
+    {
+    path: '/application/:locale?',
     name: 'application',
     component: ApplicationPage,
     meta: {
       layout: WebsiteLayout
-    }, 
+    },
   },
-  { 
-    path: '/profile',
+  {
+    path: '/profile/:locale?',
     name: 'profile',
     component: ProfilePage,
     meta: {
       layout: WebsiteLayout
-    }, 
+    },
   },
-  { 
+  {
     path: '/admin',
     meta: {
       layout: AdminLayout
-    }, 
+    },
     children: [
       {
         path: 'statistics',

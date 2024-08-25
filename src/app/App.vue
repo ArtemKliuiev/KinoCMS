@@ -18,20 +18,10 @@ import { useRoute} from 'vue-router'
 import { computed } from 'vue'
 import { AdminLayout } from "@/components/layouts";
 import SvgManager from "@/components/base/svg/SvgManager.vue";
-import { useScrollLock } from "@/components/composable";
-import { watch } from "vue";
 
 const route = useRoute()
 
 const layout = computed(() => route.meta.layout || AdminLayout)
-
-watch(() => route.path, () => {
-  const { unlockScroll } = useScrollLock()
-  unlockScroll()
-});
-
-
-
 </script>
 
 <style lang="scss" scoped></style>

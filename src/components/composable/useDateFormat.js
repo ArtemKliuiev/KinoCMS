@@ -1,4 +1,4 @@
-export function changeDateFormat(date) {
+export function useDateFormat(date) {
     const day = date.getDate();
     const month = date.getMonth() + 1;
     const year = date.getFullYear();

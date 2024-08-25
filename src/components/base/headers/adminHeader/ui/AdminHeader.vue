@@ -1,21 +1,17 @@
 <script setup>
 import { BurgerMenu } from "@/components/ui";
 import { onMounted, ref, watch } from "vue";
+import {useScrollLock} from "@/components/composable/index.js";
 import { BaseButtonText } from "@/components/base";
 
 const props = defineProps(['active'])
 const emit = defineEmits(['close'])
 
-function burgerClick() {
-  const { lockScroll, unlockScroll } = useScrollLock()
+// function burgerClick() {
+//   emit('close', !props.active)
+//   useScrollLock(!props.active)
+// }
 
-  emit('close', !props.active)
-  if (!props.active) {
-    lockScroll()
-  } else {
-    unlockScroll()
-  }
-}
 </script>
 
 <template>

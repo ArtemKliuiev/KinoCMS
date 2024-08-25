@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useScrollLock, useCheckAdmin } from "@/components/composable";
+import { getUser } from "@/components/mixins/index.js";
 import { routes } from "./routes"
 
 export const router = createRouter({
@@ -6,32 +8,32 @@ export const router = createRouter({
   routes,
 })
 
-// // navigation guards
-// router.beforeEach(async (to, from, next) => {
-//   const paramsLocale = to.params.locale
+router.beforeEach(async (to, from, next) => {
+    if(to.matched[0].path === '/admin'){
+        const isAdmin = await useCheckAdmin()
 
-//   // use locale if paramsLocale is not in SUPPORT_LOCALES
-//   if (!SUPPORT_LOCALES.includes(paramsLocale)) {
-//     return next(`/${locale}`)
-//   }
+        if(isAdmin){
+            next()
+        }else {
+            next(from)
+        }
+    }else if (to.name === 'profile'){
+        const user = await getUser()
 
-//   // load locale messages
-//   if (!i18n.global.availableLocales.includes(paramsLocale)) {
-//     await loadLocaleMessages(i18n, paramsLocale)
-//   }
+        if(user !== null){
+            console.log('ок')
+            next()
+        }else {
+            console.log('huy')
+            next('/')
+        }
+    }
+    else {
+        next()
+    }
+});
 
-//   // set i18n language
-//   setI18nLanguage(i18n, paramsLocale)
+router.afterEach((to, from) => {
+   useScrollLock(false)
+})
 
-//   return next()
-// })
-
-// router.beforeEach((to, from, next) => {
-//   const lang = new URLSearchParams(window.location.search).get('lang');
-
-//   if (lang && to.query.lang !== lang) {
-//     next({ ...to, query: {  lang } }); 
-//   } else {
-//     next();
-//   }
-// });

@@ -1,3 +1,6 @@
 export { useScrollLock } from './useScrollLock'
 export { useLocalStorage } from './useLocalStorage'
 export { useUrlQuery } from './useUrlQuery'
+export { useDateFormat } from './useDateFormat.js'
+export { useObjectsEqual } from './useObjectsEqual.js'
+export { useCheckAdmin } from './useCheckAdmin.js'

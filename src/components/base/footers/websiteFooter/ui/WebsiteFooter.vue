@@ -1,6 +1,9 @@
 <script setup>
 import { BaseButtonText } from "@/components/base";
+import { Tr } from "@/I18n/index.js";
+import {useI18n} from "vue-i18n";
 
+const { t } = useI18n()
 </script>
 
 <template>
@@ -8,7 +11,7 @@ import { BaseButtonText } from "@/components/base";
     <div class="footer__container">
       <div class="footer__main">
         <div class="footer__column footer__application">
-          <h3>{{ $t('footer.appTitle') }}</h3>
+          <h3>{{ t('footer.appTitle') }}</h3>
 
           <a class="footer__app" target="_blank" href="https://play.google.com/store/games?hl=ua">
             <v-icon icon="mdi mdi-google-play"></v-icon>
@@ -24,30 +27,32 @@ import { BaseButtonText } from "@/components/base";
         </div>
 
         <div class="footer__column footer__poster">
-          <h3>{{ $t('footer.posterTitle') }}</h3>
+          <h3>{{ t('footer.posterTitle') }}</h3>
 
           <div class="footer__links">
-            <BaseButtonText to="/schedule">{{ $t('websitePages.schedule') }}</BaseButtonText>
-            <BaseButtonText to="/soon">{{ $t('websitePages.soon') }}</BaseButtonText>
-            <BaseButtonText to="/cinemas">{{ $t('websitePages.cinemas') }}</BaseButtonText>
-            <BaseButtonText to="/promotions">{{ $t('websitePages.promotions') }}</BaseButtonText>
+            <BaseButtonText :to="Tr.i18nRoute({ name: 'schedule' })">{{ t('websitePages.schedule') }}</BaseButtonText>
+            <BaseButtonText :to="Tr.i18nRoute({ name: 'soon' })">{{ t('websitePages.soon') }}</BaseButtonText>
+            <BaseButtonText :to="Tr.i18nRoute({ name: 'cinemas' })">{{ t('websitePages.cinemas') }}</BaseButtonText>
+            <BaseButtonText :to="Tr.i18nRoute({ name: 'promotions' })">{{ t('websitePages.promotions') }}
+            </BaseButtonText>
           </div>
         </div>
 
         <div class="footer__column footer__about-cinema">
-          <h3>{{ $t('footer.aboutCinemaTitle') }}</h3>
+          <h3>{{ t('footer.aboutCinemaTitle') }}</h3>
 
           <div class="footer__links">
-            <BaseButtonText to="/news">{{ $t('websitePages.news') }}</BaseButtonText>
-            <BaseButtonText to="/advertisement">{{ $t('websitePages.advertisement') }}</BaseButtonText>
-            <BaseButtonText to="/cafe">{{ $t('websitePages.cafe') }}</BaseButtonText>
-            <BaseButtonText to="/">{{ $t('websitePages.contacts') }}</BaseButtonText>
+            <BaseButtonText :to="Tr.i18nRoute({ name: 'news' })">{{ t('websitePages.news') }}</BaseButtonText>
+            <BaseButtonText :to="Tr.i18nRoute({ name: 'advertisement' })">{{ t('websitePages.advertisement') }}
+            </BaseButtonText>
+            <BaseButtonText :to="Tr.i18nRoute({ name: 'cafe' })">{{ t('websitePages.cafe') }}</BaseButtonText>
+            <BaseButtonText :to="Tr.i18nRoute({ name: 'main' })">{{ t('websitePages.contacts') }}</BaseButtonText>
           </div>
         </div>
 
 
         <div class="footer__column footer__social-networks">
-          <h3>{{ $t('footer.socialTitle') }}</h3>
+          <h3>{{ t('footer.socialTitle') }}</h3>
 
           <div class="footer__networks">
             <a class="footer__social-link" target="_blank" href="https://uk-ua.facebook.com/">
@@ -74,9 +79,9 @@ import { BaseButtonText } from "@/components/base";
       </div>
 
       <div class="footer__bottom-line">
-        <p>{{ $t('footer.bottomInfo') }}</p>
+        <p>{{ t('footer.bottomInfo') }}</p>
 
-        <BaseButtonText to="/admin/statistics">{{ $t('footer.forAdmin') }}</BaseButtonText>
+        <BaseButtonText to="/admin/statistics">{{ t('footer.forAdmin') }}</BaseButtonText>
       </div>
     </div>
   </footer>

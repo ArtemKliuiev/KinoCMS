@@ -1,9 +1,2 @@
-import uk from './uk.json'
-import ru from './ru.json'
-
-export const defaultLocale = 'uk'
-
-export const languages = {
-  uk,
-  ru
-}
+export { i18n } from './main.js'
+export { Tr } from './translation.js'

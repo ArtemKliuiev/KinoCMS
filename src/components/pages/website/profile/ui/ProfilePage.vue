@@ -2,12 +2,13 @@
 import { computed, ref, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router';
 import { useI18n } from "vue-i18n";
-import { getAuth, signOut,updatePassword,  updateProfile, updateEmail} from "firebase/auth";
+import { getAuth, signOut, updatePassword, updateProfile, updateEmail } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import {validationRules, changeDateFormat, db, getUser, areObjectsEqual, refreshSign} from "@/components/mixins";
-import { useScrollLock } from "@/components/composable";
+import { validationRules, db, getUser, refreshSign } from "@/components/mixins";
+import { useScrollLock, useObjectsEqual, useDateFormat } from "@/components/composable";
 
-const { t } = useI18n({ useScope: 'global' })
+
+const { t } = useI18n()
 const router = useRouter()
 const auth = getAuth();
 const mainDataFormValid = ref(false);
@@ -18,7 +19,7 @@ const dateDialog = ref(false)
 const bottomSheet = ref(false)
 const snackbar = ref(false)
 const date = ref(new Date())
-const curDate = changeDateFormat(new Date())
+const curDate = useDateFormat(new Date())
 let mainFirebaseData = {}
 let contactsFirebaseData = {}
 
@@ -50,7 +51,7 @@ onMounted(() => {
 
 const rules = computed(() => validationRules(t, contactsData.value.password));
 const dateFormat = computed(() => {
-  const newDate = changeDateFormat(date.value)
+  const newDate = useDateFormat(date.value)
 
   if (newDate !== curDate) {
     mainFormData.value.birthday = newDate
@@ -60,31 +61,21 @@ const dateFormat = computed(() => {
 })
 
 watch(dateDialog, () => {
-  scrollLock(dateDialog.value)
+  useScrollLock(dateDialog.value, true)
 })
 
 watch(singDialog, () => {
-  scrollLock(singDialog.value)
+  useScrollLock(singDialog.value, true)
   cleanSignForm()
 })
 
 watch(bottomSheet, () => {
-  scrollLock(bottomSheet.value)
+  useScrollLock(bottomSheet.value)
 })
 
 watch(date, () => {
   dateDialog.value = false
 })
-
-function scrollLock(boolean) {
-  const { lockScroll, unlockScroll } = useScrollLock()
-
-  if (boolean) {
-    lockScroll()
-  } else {
-    unlockScroll()
-  }
-}
 
 async function getMainFormData() {
   const user = await getUser()
@@ -94,11 +85,11 @@ async function getMainFormData() {
   if (docSnap.exists()) {
     const data = docSnap.data().mainFormData
 
-    if(data){
+    if (data) {
       mainFormData.value = data
       mainFirebaseData = docSnap.data().mainFormData
 
-      if(mainFirebaseData.birthday !== ''){
+      if (mainFirebaseData.birthday !== '') {
         date.value = new Date(mainFirebaseData.birthday)
       }
     }
@@ -114,7 +105,7 @@ async function getContactsFormData() {
 
   cleanContactsForm()
 
-  if(docSnap.data().contactsFormData?.spareEmail){
+  if (docSnap.data().contactsFormData?.spareEmail) {
     contactsData.value.spareEmail = docSnap.data().contactsFormData.spareEmail
     contactsFirebaseData.spareEmail = docSnap.data().contactsFormData.spareEmail
   }
@@ -126,7 +117,7 @@ async function getContactsFormData() {
 }
 
 async function updateMainFormData() {
-  if (!areObjectsEqual(mainFirebaseData, mainFormData.value)) {
+  if (!useObjectsEqual(mainFirebaseData, mainFormData.value)) {
     const confirmed = confirm(t('pages.profile.changeData'));
 
     if (confirmed) {
@@ -163,7 +154,7 @@ async function updateContactsData() {
     });
   }
 
-  if(contactsData.value.spareEmail !== contactsFirebaseData.spareEmail){
+  if (contactsData.value.spareEmail !== contactsFirebaseData.spareEmail) {
     await setDoc(doc(db, "users", user.uid), {
       contactsFormData: {
         spareEmail: contactsData.value.spareEmail
@@ -171,7 +162,7 @@ async function updateContactsData() {
     }, { merge: true });
   }
 
-  if(contactsData.value.password.length !== 0){
+  if (contactsData.value.password.length !== 0) {
     const user = auth.currentUser;
     const newPassword = contactsData.value.password;
 
@@ -187,32 +178,34 @@ async function updateContactsData() {
 }
 
 function checkSignIn() {
-   refreshSign(signForm.value.email, signForm.value.password)
+  refreshSign(signForm.value.email, signForm.value.password)
     .then(() => {
       updateContactsData()
     })
     .catch(error => {
       if (
-          error.code === 'auth/invalid-credential' ||
-          error.code === 'auth/wrong-password' ||
-          error.code === 'auth/missing-password' ||
-          error.code === 'auth/user-mismatch'
+        error.code === 'auth/invalid-credential' ||
+        error.code === 'auth/wrong-password' ||
+        error.code === 'auth/missing-password' ||
+        error.code === 'auth/user-mismatch'
       ) {
         alert(t('pages.profile.alert.wrongLogin'))
-      }else {
+      }else if(error.code === 'auth/too-many-requests'){
+        alert(t('pages.profile.alert.tooManyRequests'))
+      } else {
         alert(t('pages.profile.alert.errorLogin'))
       }
     });
 }
 
-function cleanSignForm(){
+function cleanSignForm() {
   signForm.value = {
     email: '',
     password: ''
   }
 }
 
-function cleanContactsForm(){
+function cleanContactsForm() {
   contactsData.value = {
     email: '',
     spareEmail: '',
@@ -233,7 +226,7 @@ function exitAccount() {
 }
 
 function checkNewData() {
-  if (!areObjectsEqual(contactsData.value, contactsFirebaseData, true)) {
+  if (!useObjectsEqual(contactsData.value, contactsFirebaseData, true)) {
     singDialog.value = true
   } else {
     bottomSheet.value = true
@@ -263,71 +256,71 @@ function submitFormSingIn() {
 <template>
   <div class="profile">
     <div class="profile__content">
-      <h1 class="profile__title">{{ $t('pages.profile.mainTitle') }}</h1>
+      <h1 class="profile__title">{{ t('pages.profile.mainTitle') }}</h1>
 
       <div class="profile__main">
         <v-sheet class="mx-auto rounded mb-10">
 
           <v-form v-model="mainDataFormValid" fast-fail @submit.prevent="submitFormMainData">
             <v-container>
-              <h2 class="profile__form-title">{{ $t('pages.profile.form.title.one') }}</h2>
+              <h2 class="profile__form-title">{{ t('pages.profile.form.title.one') }}</h2>
 
               <v-row>
                 <v-col cols="12" md="6">
-                  <v-text-field v-model="mainFormData.name" :rules="rules.name"
-                    :label="$t('pages.profile.form.name')" required variant="solo-filled"></v-text-field>
+                  <v-text-field v-model="mainFormData.name" :rules="rules.name" :label="t('pages.profile.form.name')"
+                    required variant="solo-filled"></v-text-field>
                 </v-col>
 
                 <v-col cols="12" md="6">
                   <v-text-field v-model="mainFormData.lastName" :rules="rules.name"
-                    :label="$t('pages.profile.form.lastName')" required variant="solo-filled"></v-text-field>
+                    :label="t('pages.profile.form.lastName')" required variant="solo-filled"></v-text-field>
                 </v-col>
               </v-row>
 
               <v-row>
                 <v-col cols="12" md="6">
                   <v-text-field v-model="mainFormData.nickName" :rules="rules.name"
-                    :label="$t('pages.profile.form.nickName')" required variant="solo-filled"></v-text-field>
+                    :label="t('pages.profile.form.nickName')" required variant="solo-filled"></v-text-field>
                 </v-col>
 
                 <v-col cols="12" md="6">
-                  <v-text-field v-model="mainFormData.phone" :rules="rules.phone"
-                    :label="$t('pages.profile.form.phone')" required variant="solo-filled"></v-text-field>
+                  <v-text-field v-model="mainFormData.phone" :rules="rules.phone" :label="t('pages.profile.form.phone')"
+                    required variant="solo-filled"></v-text-field>
                 </v-col>
               </v-row>
 
               <v-row>
                 <v-col cols=" 12" md="6">
                   <v-text-field v-model="mainFormData.address" :rules="rules.address"
-                    :label="$t('pages.profile.form.address')" required variant="solo-filled"></v-text-field>
+                    :label="t('pages.profile.form.address')" required variant="solo-filled"></v-text-field>
                 </v-col>
 
                 <v-col cols="12" md="6">
                   <v-text-field @focus="dateDialog = true" v-model="dateFormat"
-                    :label="$t('pages.profile.form.birthday')" required variant="solo-filled"></v-text-field>
+                    :label="t('pages.profile.form.birthday')" required variant="solo-filled"></v-text-field>
                 </v-col>
               </v-row>
 
               <v-row>
                 <v-col cols="12" md="6">
-                  <v-select :label="$t('pages.profile.form.sex.title')" v-model="mainFormData.sex"
-                    :items="[$t('pages.profile.form.sex.one'), $t('pages.profile.form.sex.two')]"
+                  <v-select :label="t('pages.profile.form.sex.title')" v-model="mainFormData.sex"
+                    :items="[t('pages.profile.form.sex.one'), t('pages.profile.form.sex.two')]"
                     variant="solo-filled"></v-select>
                 </v-col>
 
                 <v-col cols="12" md="6">
-                  <v-select v-model="mainFormData.city" :label="$t('pages.profile.form.city.title')" :items="[
-                    $t('pages.profile.form.city.kyiv'),
-                    $t('pages.profile.form.city.lviv'),
-                    $t('pages.profile.form.city.odessa'),
-                    $t('pages.profile.form.city.dnipro'),
-                    $t('pages.profile.form.city.kharkiv'),
+                  <v-select v-model="mainFormData.city" :label="t('pages.profile.form.city.title')" :items="[
+                    t('pages.profile.form.city.kyiv'),
+                    t('pages.profile.form.city.lviv'),
+                    t('pages.profile.form.city.odessa'),
+                    t('pages.profile.form.city.dnipro'),
+                    t('pages.profile.form.city.kharkiv'),
                   ]" variant="solo-filled">
                   </v-select>
                 </v-col>
               </v-row>
 
-              <v-btn color="#2a2a2a" class="mt-5" type="submit" block>{{ $t('pages.profile.saveBtn')
+              <v-btn color="#2a2a2a" class="mt-5" type="submit" block>{{ t('pages.profile.saveBtn')
                 }}</v-btn>
             </v-container>
           </v-form>
@@ -336,38 +329,38 @@ function submitFormSingIn() {
         <v-sheet class="mx-auto rounded ">
           <v-form v-model="contactsDataFormValid" fast-fail @submit.prevent="submitFormContactsData">
             <v-container>
-              <h2 class="profile__form-title">{{ $t('pages.profile.form.title.two') }}</h2>
+              <h2 class="profile__form-title">{{ t('pages.profile.form.title.two') }}</h2>
 
               <v-row>
                 <v-col cols=" 12" md="6">
-                  <v-text-field v-model="contactsData.email" :rules="rules.email"
-                    :label="$t('pages.profile.form.email')" variant="solo-filled"></v-text-field>
+                  <v-text-field v-model="contactsData.email" :rules="rules.email" :label="t('pages.profile.form.email')"
+                    variant="solo-filled"></v-text-field>
                 </v-col>
 
                 <v-col cols=" 12" md="6">
                   <v-text-field v-model="contactsData.spareEmail" :rules="rules.spareEmail"
-                    :label="$t('pages.profile.form.spareEmail')" variant="solo-filled"></v-text-field>
+                    :label="t('pages.profile.form.spareEmail')" variant="solo-filled"></v-text-field>
                 </v-col>
               </v-row>
 
               <v-row>
                 <v-col cols="12" md="6">
                   <v-text-field v-model="contactsData.password" type="password" :rules="rules.password"
-                    :label="$t('pages.profile.form.password')" variant="solo-filled">
+                    :label="t('pages.profile.form.password')" variant="solo-filled">
                   </v-text-field>
                 </v-col>
 
                 <v-col cols="12" md="6">
                   <v-text-field v-model="contactsData.nextPassword" type="password" :rules="rules.nextPassword"
-                    :label="$t('pages.profile.form.nextPassword')" variant="solo-filled">
+                    :label="t('pages.profile.form.nextPassword')" variant="solo-filled">
                   </v-text-field>
                 </v-col>
               </v-row>
 
-              <v-btn color="#2a2a2a" class="mt-5" type="submit" block>{{ $t('pages.profile.saveBtn') }}</v-btn>
+              <v-btn color="#2a2a2a" class="mt-5" type="submit" block>{{ t('pages.profile.saveBtn') }}</v-btn>
 
-              <v-btn color="#d32f2f" @click="exitAccount" class="mt-5"  block>{{
-                $t('pages.profile.exitBtn') }}</v-btn>
+              <v-btn color="#d32f2f" @click="exitAccount" class="mt-5" block>{{
+                t('pages.profile.exitBtn') }}</v-btn>
             </v-container>
           </v-form>
         </v-sheet>
@@ -384,15 +377,15 @@ function submitFormSingIn() {
     <div class="sing-dialog">
       <v-sheet class="mx-auto pa-5 rounded">
         <v-form v-model="signValid" fast-fail @submit.prevent="submitFormSingIn">
-          <h3> {{ $t('pages.profile.signTitle') }}</h3>
+          <h3> {{ t('pages.profile.signTitle') }}</h3>
 
           <v-text-field class="mb-4" variant="solo-filled" v-model="signForm.email" :rules="rules.email"
-            :label="$t('pages.auth.email')"></v-text-field>
+            :label="t('pages.auth.email')"></v-text-field>
 
           <v-text-field class="mb-4" type="password" variant="solo-filled" v-model="signForm.password"
-            :rules="rules.necessarilyPassword" :label="$t('pages.auth.password')"></v-text-field>
+            :rules="rules.necessarilyPassword" :label="t('pages.auth.password')"></v-text-field>
 
-          <v-btn color="#2a2a2a" class="mt-2" type="submit" block>{{ $t('pages.profile.saveBtn') }}</v-btn>
+          <v-btn color="#2a2a2a" class="mt-2" type="submit" block>{{ t('pages.profile.saveBtn') }}</v-btn>
         </v-form>
       </v-sheet>
     </div>
@@ -401,12 +394,12 @@ function submitFormSingIn() {
 
   <v-snackbar multi-line timeout="1500" class="profile__snackbar" color="#424242" v-model="snackbar">
     <div class="profile__snackbar-text">
-      {{ $t('pages.profile.snackbar.text') }}
+      {{ t('pages.profile.snackbar.text') }}
     </div>
   </v-snackbar>
 
   <v-bottom-sheet v-model="bottomSheet">
-    <v-card :title="$t('pages.profile.bottomSheet.title')" :text="$t('pages.profile.bottomSheet.text')"></v-card>
+    <v-card :title="t('pages.profile.bottomSheet.title')" :text="t('pages.profile.bottomSheet.text')"></v-card>
   </v-bottom-sheet>
 </template>
 

@@ -1,5 +1,5 @@
 
-export function areObjectsEqual(object1, object2, delEmpty = false) {
+export function useObjectsEqual(object1, object2, delEmpty = false) {
     let obj1 = object1
     let obj2 = object2
 
@@ -18,7 +18,7 @@ export function areObjectsEqual(object1, object2, delEmpty = false) {
     if (keys1.length !== keys2.length) return false;
 
     for (const key of keys1) {
-        if (!keys2.includes(key) || !areObjectsEqual(obj1[key], obj2[key])) return false;
+        if (!keys2.includes(key) || !useObjectsEqual(obj1[key], obj2[key])) return false;
     }
 
     return true;
