@@ -1,0 +1,35 @@
+@import '@/assets/styles/styles';
+
+.banners-section{
+    background-color: $grayOne;
+    border-radius: 5px;
+    padding: 10px;
+
+    &__top-line{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__banners{
+        display: grid;
+        grid-template: auto / 1fr 1fr 1fr 1fr;
+        margin-bottom: 10px;
+        gap: 10px;
+
+        @include media-breakpoint-down(sm) {
+            grid-template: auto / 1fr 1fr ;
+        }
+
+        @include media-breakpoint-down(sm) {
+            grid-template: auto / 1fr 1fr ;
+        }
+
+        @include media-breakpoint-down(xs) {
+            grid-template: auto / 1fr;
+        }
+    }
+
+    &__dialog{
+        width: 500px;
+    }
+}

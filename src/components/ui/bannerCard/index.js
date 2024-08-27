@@ -1,0 +1,1 @@
+export {default as BannerCard } from './ui/BannerCard.vue'
