@@ -1,9 +1,9 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { BaseButtonText } from "@/components/base";
-import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import {db} from "@/components/mixins";
+import { db } from "@/components/mixins";
 import { validationRules } from "@/components/mixins/index.js";
 import { useRouter } from 'vue-router';
 import { useI18n } from "vue-i18n";
@@ -28,15 +28,11 @@ async function registration() {
     const userCredential = await createUserWithEmailAndPassword(auth, registrationForm.value.email, registrationForm.value.password);
     const user = userCredential.user
 
-    await updateProfile(user, {
-      displayName: registrationForm.value.name,
-    });
-
     await setDoc(doc(db, "users", user.uid), {
       role: "user",
       uid: user.uid,
-      contactsFormData: {
-        email: user.email
+      mainFormData: {
+        name: registrationForm.value.name
       }
     });
   } catch (error) {

@@ -3,7 +3,8 @@
 .admin-layout {
   display: grid;
   grid-template-rows: auto 1fr auto;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 
   &__header {
     position: fixed;
@@ -16,6 +17,7 @@
     display: grid;
     grid-template-columns: auto 1fr;
     grid-row: 2;
+    overflow: auto;
 
     @include media-breakpoint-down(md) {
       margin-top: 50px;

@@ -8,6 +8,7 @@
   height: 100%;
   background-color: $grayTwo;
   overflow: hidden;
+  position: relative;
 
   @include media-breakpoint-down(md) {
     height: calc(100% - 50px);

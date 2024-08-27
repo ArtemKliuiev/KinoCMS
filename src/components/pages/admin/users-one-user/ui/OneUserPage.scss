@@ -1,0 +1,29 @@
+@import '@/assets/styles/styles';
+
+.user {
+  &__breadcrumbs {
+    margin-bottom: 10px;
+  }
+
+  &__title {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  &__form {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  &__snackbar {
+    @include media-breakpoint-up(sm) {
+      display: flex;
+      justify-content: flex-end;
+      padding: 5px;
+    }
+
+    &-text {
+      text-align: center;
+    }
+  }
+}

@@ -3,18 +3,19 @@
 .users {
   max-width: calc(100vw - 20px);
 
-  &__breadcrumbs{
-    margin-bottom: 10px;
-  }
-
-  &__title{
+  &__title {
     text-align: center;
-    margin-bottom: 20px;
+    margin: 30px 0 20px;
   }
 
-  &__table{
-
-
+  &__table {
+    .v-data-table__td {
+      justify-content: center;
+    }
   }
 
+  &__btn {
+    display: flex;
+    justify-content: center;
+  }
 }

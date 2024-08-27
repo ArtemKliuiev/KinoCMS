@@ -50,6 +50,7 @@ onMounted(() => {
 })
 
 const rules = computed(() => validationRules(t, contactsData.value.password));
+
 const dateFormat = computed(() => {
   const newDate = useDateFormat(date.value)
 
@@ -57,6 +58,7 @@ const dateFormat = computed(() => {
     mainFormData.value.birthday = newDate
     return newDate
   }
+
   return ''
 })
 
@@ -89,13 +91,11 @@ async function getMainFormData() {
       mainFormData.value = data
       mainFirebaseData = docSnap.data().mainFormData
 
-      if (mainFirebaseData.birthday !== '') {
+      if (data.birthday) {
         date.value = new Date(mainFirebaseData.birthday)
       }
     }
   }
-
-  mainFormData.value.name = user.displayName
 }
 
 async function getContactsFormData() {
@@ -121,11 +121,6 @@ async function updateMainFormData() {
     const confirmed = confirm(t('pages.profile.changeData'));
 
     if (confirmed) {
-      if (mainFormData.value.name !== '') {
-        await updateProfile(auth.currentUser, {
-          displayName: mainFormData.value.name,
-        })
-      }
       const user = await getUser()
 
       await setDoc(doc(db, "users", user.uid), {
@@ -196,7 +191,7 @@ function checkSignIn() {
         error.code === 'auth/user-mismatch'
       ) {
         alert(t('pages.profile.alert.wrongLogin'))
-      }else if(error.code === 'auth/too-many-requests'){
+      } else if (error.code === 'auth/too-many-requests') {
         alert(t('pages.profile.alert.tooManyRequests'))
       } else {
         alert(t('pages.profile.alert.errorLogin'))
