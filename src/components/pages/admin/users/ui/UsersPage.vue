@@ -1,6 +1,6 @@
 <script setup>
 import {UIBreadcrumbs} from "@/components/ui/index.js";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import {db} from "@/components/mixins";
 import {computed, onMounted, ref} from "vue";
 
