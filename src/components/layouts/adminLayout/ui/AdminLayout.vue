@@ -22,7 +22,7 @@ const burger = ref(false)
         </nav>
 
         <div class="admin-layout__main-page">
-          <div class="container">
+          <div class="container-admin">
             <router-view />
           </div>
         </div>

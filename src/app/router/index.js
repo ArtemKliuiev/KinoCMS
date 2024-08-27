@@ -9,28 +9,30 @@ export const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-    if(to.matched[0].path === '/admin'){
-        const isAdmin = await useCheckAdmin()
+    // if(to.matched[0].path === '/admin'){
+    //     const isAdmin = await useCheckAdmin()
+    //
+    //     if(isAdmin){
+    //         next()
+    //     }else {
+    //         next(from)
+    //     }
+    // }else if (to.name === 'profile'){
+    //     const user = await getUser()
+    //
+    //     if(user !== null){
+    //         console.log('ок')
+    //         next()
+    //     }else {
+    //         console.log('huy')
+    //         next('/')
+    //     }
+    // }
+    // else {
+    //     next()
+    // }
 
-        if(isAdmin){
-            next()
-        }else {
-            next(from)
-        }
-    }else if (to.name === 'profile'){
-        const user = await getUser()
-
-        if(user !== null){
-            console.log('ок')
-            next()
-        }else {
-            console.log('huy')
-            next('/')
-        }
-    }
-    else {
-        next()
-    }
+    next()
 });
 
 router.afterEach((to, from) => {

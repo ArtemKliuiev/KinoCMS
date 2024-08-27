@@ -1,0 +1,38 @@
+@import '@/assets/styles/styles';
+
+.breadcrumbs{
+  display: flex;
+
+  &__link{
+    position: relative;
+    margin-right: 5px;
+
+    a{
+      &:hover{
+        @include media-breakpoint-up(md) {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    &_disabled{
+      opacity: 0.5;
+
+      span{
+        cursor: default;
+      }
+    }
+
+    &:after{
+      content: '/';
+      margin-left: 5px;
+    }
+
+    //&:first-child{
+    //  &:before{
+    //    content: '';
+    //    margin: 0;
+    //  }
+    //}
+  }
+}

@@ -152,6 +152,12 @@ async function updateContactsData() {
     }).catch((error) => {
       console.error(error)
     });
+
+    await setDoc(doc(db, "users", user.uid), {
+      contactsFormData: {
+        email: contactsData.value.email
+      }
+    }, { merge: true });
   }
 
   if (contactsData.value.spareEmail !== contactsFirebaseData.spareEmail) {
@@ -279,7 +285,7 @@ function submitFormSingIn() {
 
               <v-row>
                 <v-col cols="12" md="6">
-                  <v-text-field v-model="mainFormData.nickName" :rules="rules.name"
+                  <v-text-field v-model="mainFormData.nickName" :rules="rules.nickname"
                     :label="t('pages.profile.form.nickName')" required variant="solo-filled"></v-text-field>
                 </v-col>
 

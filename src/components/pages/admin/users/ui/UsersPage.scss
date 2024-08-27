@@ -1,0 +1,20 @@
+@import '@/assets/styles/styles';
+
+.users {
+  max-width: calc(100vw - 20px);
+
+  &__breadcrumbs{
+    margin-bottom: 10px;
+  }
+
+  &__title{
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  &__table{
+
+
+  }
+
+}

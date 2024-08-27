@@ -9,7 +9,6 @@ import { useRouter } from 'vue-router';
 import { useI18n } from "vue-i18n";
 import { Tr } from "@/I18n/index.js";
 
-
 const { t } = useI18n()
 const router = useRouter()
 const formValid = ref(false);
@@ -35,6 +34,10 @@ async function registration() {
 
     await setDoc(doc(db, "users", user.uid), {
       role: "user",
+      uid: user.uid,
+      contactsFormData: {
+        email: user.email
+      }
     });
   } catch (error) {
     registrationError(error)

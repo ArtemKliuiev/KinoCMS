@@ -4,6 +4,11 @@ export const validationRules = (t, password = '') => ({
         value => value.length <= 20 || t('validationRules.name.two'),
         value => /^[a-zа-яїєі]*$/i.test(value) || t('validationRules.name.three')
     ],
+    nickname: [
+        value => value.length >= 3 || value.length === 0 || t('validationRules.name.one'),
+        value => value.length <= 20 || t('validationRules.name.two'),
+        value => /^[\wа-яїєі.-]*$/i.test(value) || t('validationRules.name.three')
+    ],
     phone: [
         value => {
             if (!value) return true;

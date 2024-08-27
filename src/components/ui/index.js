@@ -1,3 +1,4 @@
 export * from './menu'
 export * from './burger'
 export * from './dropdown'
+export * from './breadcrumbs'
