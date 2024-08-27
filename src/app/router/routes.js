@@ -214,7 +214,7 @@ export const routes = [
         component: UsersPage
       },
       {
-        path: 'user/:id',
+        path: 'user/:uid',
         name: 'user',
         component: OneUserPage
       }

@@ -1,9 +1,11 @@
 <script setup>
 import {UIBreadcrumbs} from "@/components/ui/index.js";
 import { collection, getDocs } from "firebase/firestore";
+import { useRouter } from "vue-router";
 import {db} from "@/components/mixins";
 import {computed, onMounted, ref} from "vue";
 
+const router = useRouter()
 const search = ref('')
 const users = ref([])
 
@@ -28,22 +30,24 @@ const headers = [
   { key: 'edit', sortable: false },
 ]
 
-const dessert2s = computed(() => {
+const desserts = computed(() => {
   const arr = []
   users.value.forEach(item => {
+    arr.push({
+      name: item.mainFormData.name,
+      nickname: item.mainFormData.nickname,
+      city: item.mainFormData.city,
+      sex: item.mainFormData.sex,
+      email: item.contactsFormData.email,
+      phone: item.mainFormData.phone,
+      birthday: item.mainFormData.birthday,
+      edit: item.uid
+    })
   })
+
+  return arr
 })
 
-const desserts = [
-  {
-    name: 'Frozen Yogurt',
-    email: 'faerfae@ewfa.faewrf',
-    fat: 6.0,
-    carbs: 24,
-    protein: 4.0,
-    iron: 1,
-  }
-]
 
 async function getUsersData(){
   const querySnapshot = await getDocs(collection(db, "users"));
@@ -54,8 +58,9 @@ async function getUsersData(){
   console.log(users.value)
 }
 
-function navigateToPage (e){
-  console.log(e)
+function navigateToPage (uid){
+  console.log(uid)
+  router.push('/admin/user/' + uid)
 }
 
 </script>
@@ -85,7 +90,7 @@ function navigateToPage (e){
             hide-default-footer
         >
           <template v-slot:[`item.edit`]="{ item }">
-            <v-btn color="#2a2a2a" @click="navigateToPage(item.name)">Редагувати</v-btn>
+            <v-btn color="#2a2a2a" @click="navigateToPage(item.edit)">Редагувати</v-btn>
           </template>
         </v-data-table>
       </v-card-text>
