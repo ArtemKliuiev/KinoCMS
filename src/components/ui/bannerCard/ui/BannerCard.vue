@@ -1,9 +1,11 @@
 <script setup>
 import { BaseSvg } from "@/components/base";
 import { ref } from 'vue';
+import {adminValidationRules} from "@/components/mixins/index.js";
  
 const props = defineProps(['empty'])
 
+const rules = adminValidationRules()
 const validForm = ref(false)
 const dialog = ref(false)
 
@@ -42,13 +44,15 @@ function addDialog(){
 
             <span v-else>Змінити баннер</span>
           </h3>
-           
-          <v-file-input  accept="image/*" label="Завантажити зображення" variant="solo-filled"></v-file-input>
-            
-          <v-text-field variant="solo-filled" 
+
+          <v-file-input v-if="empty" class="mb-2" :rules="rules.necessarilyFile" accept="image/*" label="Завантажити зображення" variant="solo-filled"></v-file-input>
+
+          <v-file-input v-else class="mb-2" :rules="rules.file" accept="image/*" label="Завантажити нове зображення" variant="solo-filled"></v-file-input>
+
+          <v-text-field class="mb-2" variant="solo-filled"
             label="Заголовок"></v-text-field>
-            
-          <v-text-field variant="solo-filled" 
+
+          <v-text-field class="mb-2" :rules="rules.url" variant="solo-filled"
             label="URL"></v-text-field>
 
           <v-btn color="#2a2a2a" class="mt-2 mb-3" type="submit" block>
