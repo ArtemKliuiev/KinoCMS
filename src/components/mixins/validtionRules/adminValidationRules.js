@@ -57,13 +57,19 @@ export const adminValidationRules = ( password = '') => ({
     ],
     url: [
         value => {
-            console.log(value)
-            return value || 'Додайте посилання'
+            if(value) return true 
+
+            return 'Додайте посилання'
         },
+        value => /^.{3,}$/.test(value) || value === '' || "Посилання має містити не менше 3 символів.",
+    ],
+    title: [
         value => {
-        console.log(value)
-            return value || 'Додайте посилання'
-        }
+            if(value) return true 
+
+            return 'Додайте посилання'
+        },
+        value => /^.{3,}$/.test(value) || value === '' || "Заголовок має містити не менше 3 символів.",
     ],
     name: [
         value => /^.{3,}$/.test(value) || value === '' || "Ім'я має містити не менше 3 символів.",

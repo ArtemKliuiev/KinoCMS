@@ -3,28 +3,39 @@ import { BaseSvg } from "@/components/base";
 import { ref } from 'vue';
 import {adminValidationRules} from "@/components/mixins/index.js";
  
-const props = defineProps(['empty'])
+const props = defineProps(['bannerData','empty'])
+const emit = defineEmits(['update:modelValue', 'change', 'add'])
 
 const rules = adminValidationRules()
 const validForm = ref(false)
 const dialog = ref(false)
+const formBannerCard = ref({
+  file: null,
+  title: '',
+  url: ''
+})
+
+if(props.bannerData){
+  formBannerCard.value = props.bannerData
+}
 
 function addData(){
   if(validForm.value){
-    console.log('ok')
+    if(props.empty){
+      emit('add')
+
+    }else{
+      emit('change')
+    }
+
+    dialog.value = false
   }
 }
-
-function addDialog(){
-  dialog.value = true
-  console.log(123)
-}
-
 
 </script>
 
 <template>
-  <div  @click=" addDialog" class="banner-card">
+  <div  @click="dialog = true" class="banner-card">
     <div v-if="empty"  class="banner-card__empty">
 
       <BaseSvg class="banner-card__empty-icon" id="plus" />
@@ -45,14 +56,14 @@ function addDialog(){
             <span v-else>Змінити баннер</span>
           </h3>
 
-          <v-file-input v-if="empty" class="mb-2" :rules="rules.necessarilyFile" accept="image/*" label="Завантажити зображення" variant="solo-filled"></v-file-input>
+          <v-file-input v-if="empty" class="mb-2" v-model="formBannerCard.file" :rules="rules.necessarilyFile" accept="image/*" label="Завантажити зображення" variant="solo-filled"></v-file-input>
 
-          <v-file-input v-else class="mb-2" :rules="rules.file" accept="image/*" label="Завантажити нове зображення" variant="solo-filled"></v-file-input>
+          <v-file-input v-else class="mb-2" v-model="formBannerCard.file" :rules="rules.file" accept="image/*" label="Завантажити нове зображення" variant="solo-filled"></v-file-input>
 
-          <v-text-field class="mb-2" variant="solo-filled"
+          <v-text-field class="mb-2" v-model="formBannerCard.title" :rules="rules.title" variant="solo-filled"
             label="Заголовок"></v-text-field>
 
-          <v-text-field class="mb-2" :rules="rules.url" variant="solo-filled"
+          <v-text-field class="mb-2" v-model="formBannerCard.url" :rules="rules.url" variant="solo-filled"
             label="URL"></v-text-field>
 
           <v-btn color="#2a2a2a" class="mt-2 mb-3" type="submit" block>
@@ -66,9 +77,7 @@ function addDialog(){
       </v-sheet>
     </div>
   </v-dialog>
-
 </template>
-
 
 <style lang="scss" scoped>
 @import './BannerCard.scss';
