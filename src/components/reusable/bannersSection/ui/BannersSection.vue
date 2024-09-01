@@ -2,41 +2,36 @@
 import { BannerCard } from "@/components/ui";
 import { computed, onMounted, ref  } from "vue";
 
-const props = defineProps(['title', 'bannerData'])
-const emit = defineEmits(['addBanner'])
+const props = defineProps(['title', 'bannerData', 'quantity'])
+const emit = defineEmits(['addBanner', 'changeBanner'])
 
 const switchInfo = ref(false)
-const addBannerForm = ref({
-        file: null,
-        title: '',
-        url: ''
-    })
 
 // const arr = ref(props.bannerData)
 const arr = computed(() => {
     const bannerArr = []
 
-    // props.bannerData.forEach(banner => {
-    //     bannerArr.push({
-    //         file: null,
-    //         title: banner.title,
-    //         url:  banner.url,
-    //         imagePath: banner.imagePath
-    //     })
-    // });
+    props.bannerData.forEach(banner => {
+        bannerArr.push({
+            file: null,
+            title: banner.title,
+            url:  banner.url,
+            id: banner.id,
+            imagePath: banner.imagePath
+        })
+    });
 
-console.log(props.bannerData)
+console.log(bannerArr)
 
     return bannerArr
 })
 
-function changeBanner(){
-    console.log(2222)
-}
 
 </script>
 
-<template>
+<template> 
+
+{{ quantity }}
     <div class="banners-section">
         <div class="banners-section__top-line">
             <h2 class="banners-section__title"> {{ title }} </h2>
@@ -50,11 +45,9 @@ function changeBanner(){
 
 
         <div class="banners-section__banners">
-            <BannerCard v-for="(item, index) in arr" :key="item" @change="changeBanner" v-model="arr[index]" />
+            <BannerCard v-for="(item, index) in arr" :key="item" @change="(data) => $emit('changeBanner', data)" :bannerData="arr[index]" />
 
-            <BannerCard @add="$emit('addBanner', addBannerForm)" v-model="addBannerForm" empty="true"/>
-
-            {{ addBannerForm }}
+            <BannerCard v-if="quantity < 4" @add="(data) => $emit('addBanner', data)" :quantity="quantity"  empty="true"/>
         </div>
 
         <div class="banners-section__bottom-line">

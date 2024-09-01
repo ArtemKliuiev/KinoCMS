@@ -8,6 +8,7 @@ import { da } from 'vuetify/locale';
 
 const image = ref(null)
 const topBanners = ref([])
+const quantityBanners = ref(0)
 
 onMounted(() => {
   getBanners()
@@ -30,17 +31,19 @@ async function getBanners(){
     if (docSnap.exists()) {
       const data = docSnap.data()
       topBanners.value = data.top
+      quantityBanners.value = data.top.length
     }
 }
 
 async function abbBannerTop(data) {
-  const imagePath = await inputFile(data.file, 'top-banners', 'efw')
+  const imagePath = await inputFile(data.file, 'top-banners', data.id)
   console.log(data)
 
   try {
     const bannerDocRef = doc(db, "data", "banners");
     await updateDoc(bannerDocRef, {
       top: arrayUnion({
+        id: data.id,
         title: data.title,
         url: data.url,
         imagePath: imagePath
@@ -50,13 +53,25 @@ async function abbBannerTop(data) {
   } catch (error) {
     console.error("Error adding data to the array: ", error);
   }
+
+  await getBanners()
+}  
+
+async function changeTopBanners(data){
+    let imagePath = data.imagePath
+
+    if(data.file){
+      imagePath = await inputFile(data.file, 'top-banners', data.id)
+    }
 }
 
 </script>
 
 <template>
 
-<BannersSection @addBanner="abbBannerTop" :bannerData="topBanners" title="Верхні баннери"/>
+
+
+<BannersSection @addBanner="abbBannerTop" @changeBanner="changeTopBanners" :quantity="quantityBanners" :bannerData="topBanners" title="Верхні баннери"/>
 
 <img :src="image" alt="">
 </template>

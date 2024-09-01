@@ -1,10 +1,10 @@
 <script setup>
 import { BaseSvg } from "@/components/base";
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import {adminValidationRules} from "@/components/mixins/index.js";
  
-const props = defineProps(['bannerData','empty'])
-const emit = defineEmits(['update:modelValue', 'change', 'add'])
+const props = defineProps(['bannerData','empty', 'quantity'])
+const emit = defineEmits([ 'change', 'add'])
 
 const rules = adminValidationRules()
 const validForm = ref(false)
@@ -12,20 +12,25 @@ const dialog = ref(false)
 const formBannerCard = ref({
   file: null,
   title: '',
-  url: ''
+  url: '',
+  id: props.quantity
 })
 
 if(props.bannerData){
   formBannerCard.value = props.bannerData
-}
+} 
+
+watch(props, () => {
+  formBannerCard.value.id = props.quantity
+})
 
 function addData(){
   if(validForm.value){
     if(props.empty){
-      emit('add')
+      emit('add', formBannerCard.value)
 
     }else{
-      emit('change')
+      emit('change', formBannerCard.value)
     }
 
     dialog.value = false
@@ -35,6 +40,8 @@ function addData(){
 </script>
 
 <template>
+    {{formBannerCard}}
+
   <div  @click="dialog = true" class="banner-card">
     <div v-if="empty"  class="banner-card__empty">
 
