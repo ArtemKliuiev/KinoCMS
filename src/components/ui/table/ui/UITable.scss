@@ -1,0 +1,79 @@
+@import '@/assets/styles/styles';
+
+.table{
+  overflow: hidden;
+
+  &__wrapper{
+    overflow: auto;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: $grayThree;
+    width: 100%;
+  }
+
+  &__header{
+    display: inline-flex;
+    align-items: center;
+    opacity: 0.7;
+    transition: opacity 300ms ease;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover{
+      @include media-breakpoint-up(md) {
+        opacity: 1;
+      }
+    }
+  }
+
+  &__arrows{
+    display: flex;
+    flex-direction: column;
+    margin-left: 5px;
+
+    &-arrow{
+      width: 16px;
+      height: 16px;
+      fill: $text-color;
+      opacity: 0.2;
+      transition: opacity 300ms ease;
+
+      &:first-child{
+        transform: rotate(180deg);
+      }
+
+      &_active{
+        opacity: 1;
+      }
+    }
+  }
+
+  &__btn{
+    border: 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 5px !important;
+  }
+
+  th, td {
+    width: 20%;
+    max-width: 200px;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 8px;
+  }
+
+  td {
+    border-top: 1px solid $text-color;
+  }
+
+  th {
+    background-color: $grayTwo;
+  }
+}
+

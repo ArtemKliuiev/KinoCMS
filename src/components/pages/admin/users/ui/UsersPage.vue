@@ -3,41 +3,56 @@
 import { collection, getDocs } from "firebase/firestore";
 import { useRouter } from "vue-router";
 import { db } from "@/components/mixins";
-import { computed, onMounted, ref } from "vue";
+import {computed, onMounted, ref, watch} from "vue";
+import {UITable} from "@/components/ui/index.js";
 
 const router = useRouter()
 const search = ref('')
+const searchParam = ref('Ім`я')
 const users = ref([])
+const pagination = ref(1)
+const quantityPages = ref(1)
 
 onMounted(() => {
   getUsersData()
 })
 
+watch(search, () => {
+   
+})
+
+watch(searchParam, () => {
+  search.value = ''
+})
+
 const headers = [
-  { align: 'start', key: 'name', title: 'Ім`я' },
-  { key: 'city', title: 'Місто' },
-  { key: 'phone', title: 'Телефон' },
-  { key: 'birthday', title: 'Дата нар.' },
-  { key: 'sex', title: 'Стать' },
-  { key: 'edit', sortable: false },
+  { value: 'name', text: 'Ім`я',sort: true  },
+  { value: 'city',  text: 'Місто', sort: true  },
+  { value: 'phone',  text: 'Телефон', sort: true  },
+  { value: 'birthday',  text: 'Дата нар.', sort: true  },
+  { value: 'sex',  text: 'Стать', sort: true  },
 ]
+
+function fullName(data){
+  let name = data?.name
+
+  if (data?.lastName) {
+    name = name + ' ' + data.lastName
+  }
+
+  return name
+}
 
 const desserts = computed(() => {
   const arr = []
   users.value.forEach(item => {
-    let name = item.mainFormData?.name
-
-    if (item.mainFormData?.lastName) {
-      name = name + ' ' + item.mainFormData.lastName
-    }
-
     arr.push({
-      name: name,
+      name: fullName(item.mainFormData),
       city: item.mainFormData?.city,
       phone: item.mainFormData?.phone,
       birthday: item.mainFormData?.birthday,
       sex: item.mainFormData?.sex,
-      edit: item.uid
+      uid: item.uid
     })
   })
 
@@ -54,6 +69,7 @@ async function getUsersData() {
 function navigateToPage(uid) {
   router.push('/admin/user/' + uid)
 }
+
 </script>
 
 <template>
@@ -61,21 +77,32 @@ function navigateToPage(uid) {
 
     <h1 class="users__title">Користувачі</h1>
 
-    <v-card flat class="users__table">
-      <v-card-text>
-        <v-text-field v-model="search" label="Search" prepend-inner-icon="mdi-magnify" variant="outlined" hide-details
-          single-line></v-text-field>
+    <v-row>
+      <v-col cols="12" md="6">
+        <v-select
+            label="Параметр пошуку"
+            hide-details
+            v-model="searchParam"
+            :items="['Ім`я', 'Місто', 'Телефон', 'Дата народження', 'Стать']"
+            variant="solo-filled"
+        ></v-select>
+      </v-col>
 
-        <v-data-table :headers="headers" :items="desserts" item-class="text-center" :search="search" dense>
-          <template class="v-data-table-column--align-center" v-slot:[`item.edit`]="{ item }">
+      <v-col cols="12" md="6">
+        <v-text-field
+            v-model="search"
+            label="Пошук користувача"
+            prepend-inner-icon="mdi-magnify"
+            variant="solo-filled"
+            hide-details
+            class="mb-5"
+        ></v-text-field>
+      </v-col>
+    </v-row>
 
-            <div class="users__btn">
-              <v-btn class="users__btn" color="#2a2a2a" @click="navigateToPage(item.edit)">Редагувати</v-btn>
-            </div>
-          </template>
-        </v-data-table>
-      </v-card-text>
-    </v-card>
+    <UITable :items="desserts" :headers="headers" @clickBtn="navigateToPage" btn="Редагувати"/>
+
+    <v-pagination class="mt-5" v-model="pagination" :length="quantityPages"></v-pagination>
   </div>
 </template>
 
