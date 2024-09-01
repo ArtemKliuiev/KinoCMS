@@ -1,11 +1,38 @@
 <script setup>
 import { BannerCard } from "@/components/ui";
-import { onMounted, ref  } from "vue";
+import { computed, onMounted, ref  } from "vue";
 
-defineProps(['title'])
+const props = defineProps(['title', 'bannerData'])
+const emit = defineEmits(['addBanner'])
 
 const switchInfo = ref(false)
-const arr = [1,2,3]
+const addBannerForm = ref({
+        file: null,
+        title: '',
+        url: ''
+    })
+
+// const arr = ref(props.bannerData)
+const arr = computed(() => {
+    const bannerArr = []
+
+    // props.bannerData.forEach(banner => {
+    //     bannerArr.push({
+    //         file: null,
+    //         title: banner.title,
+    //         url:  banner.url,
+    //         imagePath: banner.imagePath
+    //     })
+    // });
+
+console.log(props.bannerData)
+
+    return bannerArr
+})
+
+function changeBanner(){
+    console.log(2222)
+}
 
 </script>
 
@@ -23,9 +50,11 @@ const arr = [1,2,3]
 
 
         <div class="banners-section__banners">
-            <BannerCard v-for="item in arr" :key="item" />
+            <BannerCard v-for="(item, index) in arr" :key="item" @change="changeBanner" v-model="arr[index]" />
 
-            <BannerCard empty="true"/>
+            <BannerCard @add="$emit('addBanner', addBannerForm)" v-model="addBannerForm" empty="true"/>
+
+            {{ addBannerForm }}
         </div>
 
         <div class="banners-section__bottom-line">
