@@ -1,0 +1,1 @@
+export { default as UITable } from './ui/UITable.vue'
