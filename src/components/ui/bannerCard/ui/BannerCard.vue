@@ -4,7 +4,7 @@ import { ref, watch } from 'vue';
 import {adminValidationRules} from "@/components/mixins/index.js";
  
 const props = defineProps(['bannerData','empty', 'quantity'])
-const emit = defineEmits([ 'change', 'add'])
+const emit = defineEmits([ 'change', 'add', 'delete'])
 
 const rules = adminValidationRules()
 const validForm = ref(false)
@@ -13,6 +13,7 @@ const formBannerCard = ref({
   file: null,
   title: '',
   url: '',
+  imagePath: '',
   id: props.quantity
 })
 
@@ -37,19 +38,27 @@ function addData(){
   }
 }
 
+async function delBanner(){ 
+  const question = confirm('Видалити баннер')
+
+  if(question){
+    emit('delete', formBannerCard.value)
+    dialog.value = false
+  }
+}
+
 </script>
 
 <template>
-    {{formBannerCard}}
+
 
   <div  @click="dialog = true" class="banner-card">
     <div v-if="empty"  class="banner-card__empty">
-
       <BaseSvg class="banner-card__empty-icon" id="plus" />
     </div>
 
     <div v-else class="banner-card__default">
-      <img src="../../../../../public/960x540.jpg" alt="">
+      <img :src="formBannerCard.imagePath" alt="">
     </div>
   </div>
 
@@ -79,7 +88,7 @@ function addData(){
             <span v-else>Змінити</span>
           </v-btn>
 
-          <v-btn v-if="!empty" color="#d32f2f" type="submit" block>Видалити</v-btn>
+          <v-btn v-if="!empty" color="#d32f2f" @click="delBanner" block>Видалити</v-btn>
         </v-form>
       </v-sheet>
     </div>

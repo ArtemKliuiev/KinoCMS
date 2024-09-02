@@ -3,7 +3,7 @@ import { BannerCard } from "@/components/ui";
 import { computed, onMounted, ref  } from "vue";
 
 const props = defineProps(['title', 'bannerData', 'quantity'])
-const emit = defineEmits(['addBanner', 'changeBanner'])
+const emit = defineEmits(['addBanner', 'changeBanner', 'delete'])
 
 const switchInfo = ref(false)
 
@@ -20,8 +20,6 @@ const arr = computed(() => {
             imagePath: banner.imagePath
         })
     });
-
-console.log(bannerArr)
 
     return bannerArr
 })
@@ -45,9 +43,17 @@ console.log(bannerArr)
 
 
         <div class="banners-section__banners">
-            <BannerCard v-for="(item, index) in arr" :key="item" @change="(data) => $emit('changeBanner', data)" :bannerData="arr[index]" />
+            <BannerCard 
+                v-for="(item, index) in arr" 
+                :bannerData="arr[index]" 
+                :key="item"
+                @delete="(data) => $emit('delete', data)" 
+                @change="(data) => $emit('changeBanner', data)" />
 
-            <BannerCard v-if="quantity < 4" @add="(data) => $emit('addBanner', data)" :quantity="quantity"  empty="true"/>
+            <BannerCard 
+                v-if="quantity < 4" @add="(data) => $emit('addBanner', data)" 
+                :quantity="quantity"  
+                empty="true"/>
         </div>
 
         <div class="banners-section__bottom-line">
