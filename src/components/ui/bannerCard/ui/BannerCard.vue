@@ -58,12 +58,10 @@ async function delBanner(){
 <template>
   <div  @click="dialog = true" class="banner-card" :class="{'banner-card-aspect' : aspectRatio}">
     <div v-if="empty"  class="banner-card__empty">
-      {{!empty}}
       <BaseSvg class="banner-card__empty-icon" id="plus" />
     </div>
 
     <div v-else class="banner-card__default" :class="{'banner-card__default-bg' : background}">
-      {{!empty}}
       <v-img cover eager height="100%" :src="formBannerCard.imagePath"></v-img>
     </div>
   </div>
