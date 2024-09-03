@@ -3,7 +3,7 @@ import { BaseSvg } from "@/components/base";
 import { ref, watch } from 'vue';
 import {adminValidationRules} from "@/components/mixins/index.js";
  
-const props = defineProps(['bannerData','empty', 'quantity'])
+const props = defineProps(['bannerData', 'aspectRatio', 'empty', 'quantity', 'background'])
 const emit = defineEmits([ 'change', 'add', 'delete'])
 
 const rules = adminValidationRules()
@@ -39,26 +39,23 @@ function addData(){
 }
 
 async function delBanner(){ 
-  const question = confirm('Видалити баннер')
+  const question = confirm(props.background? 'Видалити задній фон' :'Видалити баннер')
 
   if(question){
     emit('delete', formBannerCard.value)
     dialog.value = false
   }
 }
-
 </script>
 
 <template>
-
-
-  <div  @click="dialog = true" class="banner-card">
+  <div  @click="dialog = true" class="banner-card" :class="{'banner-card-aspect' : aspectRatio}">
     <div v-if="empty"  class="banner-card__empty">
       <BaseSvg class="banner-card__empty-icon" id="plus" />
     </div>
 
-    <div v-else class="banner-card__default">
-      <img :src="formBannerCard.imagePath" alt="">
+    <div v-else class="banner-card__default" :class="{'banner-card__default-bg' : background}">
+      <v-img cover eager height="100%" :src="formBannerCard.imagePath"></v-img>
     </div>
   </div>
 
@@ -74,12 +71,14 @@ async function delBanner(){
 
           <v-file-input v-if="empty" class="mb-2" v-model="formBannerCard.file" :rules="rules.necessarilyFile" accept="image/*" label="Завантажити зображення" variant="solo-filled"></v-file-input>
 
-          <v-file-input v-else class="mb-2" v-model="formBannerCard.file" :rules="rules.file" accept="image/*" label="Завантажити нове зображення" variant="solo-filled"></v-file-input>
+          <v-file-input v-if="!empty && !background" class="mb-2" v-model="formBannerCard.file" :rules="rules.file" accept="image/*" label="Завантажити нове зображення" variant="solo-filled"></v-file-input>
 
-          <v-text-field class="mb-2" v-model="formBannerCard.title" :rules="rules.title" variant="solo-filled"
+          <v-file-input v-if="!empty && background" class="mb-2" v-model="formBannerCard.file" :rules="rules.necessarilyFile" accept="image/*" label="Завантажити нове зображення" variant="solo-filled"></v-file-input>
+
+          <v-text-field v-if="!background" class="mb-2" v-model="formBannerCard.title" :rules="rules.title" variant="solo-filled"
             label="Заголовок"></v-text-field>
 
-          <v-text-field class="mb-2" v-model="formBannerCard.url" :rules="rules.url" variant="solo-filled"
+          <v-text-field v-if="!background" class="mb-2" v-model="formBannerCard.url" :rules="rules.url" variant="solo-filled"
             label="URL"></v-text-field>
 
           <v-btn color="#2a2a2a" class="mt-2 mb-3" type="submit" block>

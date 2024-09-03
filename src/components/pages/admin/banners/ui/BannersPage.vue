@@ -3,17 +3,24 @@ import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObjec
 import { doc, getDoc, setDoc, updateDoc, arrayUnion  } from "firebase/firestore";
 import { db } from "@/components/mixins";
 import { onMounted, ref } from 'vue';
-import { BannersSection } from '@/components/reusable';
-import { da } from 'vuetify/locale';
+import { BannersSection, BackgroundSection } from '@/components/reusable';
 
 const image = ref(null)
+const backgroundData = ref({})
 const topBannersRef = ref([])
-let topBanners = []
-const quantityBanners = ref(0)
+const bottomBannersRef = ref([])
+const topQuantityBanners = ref(0)
+const bottomQuantityBanners = ref(0)
+const topBannersData = ref({})
+const bottomBannersData = ref({})
 const bannerDocRef = doc(db, "data", "banners");
+let topBanners = [];
+let bottomBanners = [];
 
 onMounted(() => {
   getBanners()
+  getBannersData()
+  getBackground()
 })
 
 async function inputFile(file, path){
@@ -21,10 +28,29 @@ async function inputFile(file, path){
   const storegeImages = storageRef(storage, path);
   const fullPath = storageRef(storegeImages, generateUniqueId() + '.jpg');
 
-
   await uploadBytes(fullPath, file)
 
   return await getDownloadURL (fullPath)
+}
+
+function setBannersData(banners, data){
+  setDoc(doc(db, "data", "data-banners"), {
+    [banners]: {
+      switch: data.switch,
+      select: data.select
+    }
+  }, { merge: true });
+}
+
+async function getBannersData(){
+  const docRef = doc(db, "data", 'data-banners');
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    const data = docSnap.data()
+    topBannersData.value = data.top
+    bottomBannersData.value = data.bottom
+  }
 }
 
 async function deleteFileByUrl(fileUrl) {
@@ -34,32 +60,52 @@ async function deleteFileByUrl(fileUrl) {
         const link = storageRef(storage, fileUrl);
 
         await deleteObject(link);
-
-        console.log('Файл успешно удален');
     } catch (error) {
-        console.error('Ошибка при удалении файла:', error);
+        console.error(error);
     }
 }
 
 async function getBanners(){
   const docRef = doc(db, "data", 'banners');
-    const docSnap = await getDoc(docRef);
+  const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      const data = docSnap.data()
-      topBannersRef.value = data.top
-      topBanners = data.top
-      quantityBanners.value = data.top.length
-    }
+  if (docSnap.exists()) {
+    const data = docSnap.data()
+    topBannersRef.value = data.top
+    bottomBannersRef.value = data.bottom
+    topBanners = data.top
+    bottomBanners = data.bottom
+    topQuantityBanners.value = data.top.length
+    bottomQuantityBanners.value = data.bottom.length
+  }
 }
 
 async function abbBannerTop(data) {
   const imagePath = await inputFile(data.file, 'top-banners')
-  console.log(data)
 
   try {
     await updateDoc(bannerDocRef, {
       top: arrayUnion({
+        id: data.id,
+        title: data.title,
+        url: data.url,
+        imagePath: imagePath
+      })
+
+    });
+  } catch (error) {
+    console.error(error);
+  }
+
+  await getBanners()
+}  
+
+async function abbBannerBottom(data) {
+  const imagePath = await inputFile(data.file, 'bottom-banners')
+
+  try {
+    await updateDoc(bannerDocRef, {
+      bottom: arrayUnion({
         id: data.id,
         title: data.title,
         url: data.url,
@@ -74,9 +120,7 @@ async function abbBannerTop(data) {
   await getBanners()
 }  
 
-async function changeTopBanners(data){
-
-
+async function changeBannersTop(data){
     let imagePath = data.imagePath
 
     if(data.file){
@@ -86,7 +130,6 @@ async function changeTopBanners(data){
 
     delete data.file
     data.imagePath = getUpdatedImageUrl(imagePath)
-
     topBanners[data.id] = {...data}
 
     await updateDoc(bannerDocRef, {
@@ -96,15 +139,26 @@ async function changeTopBanners(data){
     await getBanners()
 }
 
-function getUpdatedImageUrl(imageUrl) {
-  return `${imageUrl}?v=${new Date().getTime()}`;
+async function changeBannersBottom(data){
+    let imagePath = data.imagePath
+
+    if(data.file){
+      deleteFileByUrl(data.imagePath)
+      imagePath = await inputFile(data.file, 'bottom-banners', data.id)
+    }
+
+    delete data.file
+    data.imagePath = getUpdatedImageUrl(imagePath)
+    bottomBanners[data.id] = {...data}
+
+    await updateDoc(bannerDocRef, {
+      bottom: bottomBanners
+    })
+
+    await getBanners()
 }
 
-function generateUniqueId() {
-    return 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).substr(2, 9);
-}
-
-async function delTopBanner(data){
+async function delBannerTop(data){
   deleteFileByUrl(data.imagePath)
 
   topBanners.splice(data.id, 1)
@@ -120,23 +174,97 @@ async function delTopBanner(data){
   await getBanners()
 }
 
+async function delBannerBottom(data){
+  deleteFileByUrl(data.imagePath)
+
+  bottomBanners.splice(data.id, 1)
+
+  bottomBanners.forEach((obj, index) => {
+    obj.id = index
+  })
+
+  await updateDoc(bannerDocRef, {
+      bottom: bottomBanners
+    })
+    
+  await getBanners()
+}
+
+async function setBackground(data){
+  let imagePath = backgroundData.value.imagePath
+
+  if(data.file){
+    imagePath = await inputFile(data.file, 'top-banners')
+  }
+
+  setDoc(doc(db, "data", "background"), {
+    switch: data.switch,
+    imagePath: imagePath
+  }, { merge: true });
+
+  await getBackground()
+}
+
+async function getBackground(){
+  const docRef = doc(db, "data", "background");
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    backgroundData.value = docSnap.data()
+  }
+}
+
+async function deleteBackground(data){
+  setDoc(doc(db, "data", "background"), {
+    switch: false,
+    imagePath: ''
+  }, { merge: true });
+
+  await deleteFileByUrl(data.imagePath)
+  await getBackground()
+}
+
+function getUpdatedImageUrl(imageUrl) {
+  return `${imageUrl}?v=${new Date().getTime()}`;
+}
+
+function generateUniqueId() {
+  return 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).substr(2, 9);
+}
 </script>
 
 <template>
+<div class="banners-page">  
+  <BackgroundSection
+    @setData="setBackground" 
+    @delete="deleteBackground"
+    :data="backgroundData"
+    title="Задній фон сайту"
+  />
 
+  <BannersSection
+    @delete="delBannerTop"  
+    @addBanner="abbBannerTop" 
+    @changeBanner="changeBannersTop" 
+    @changeData="(data) => setBannersData('top', data)"
+    :data="topBannersData"
+    :quantity="topQuantityBanners" 
+    :bannerData="topBannersRef" 
+    title="Верхні баннери"
+  />
 
-
-<BannersSection
-  @delete="delTopBanner"  
-  @addBanner="abbBannerTop" 
-  @changeBanner="changeTopBanners" 
-  :quantity="quantityBanners" 
-  :bannerData="topBannersRef" 
-  title="Верхні баннери"/>
-
-<img :src="image" alt="">
+  <BannersSection
+    @delete="delBannerBottom"  
+    @addBanner="abbBannerBottom" 
+    @changeBanner="changeBannersBottom" 
+    @changeData="(data) => setBannersData('bottom', data)"
+    :data="bottomBannersData"
+    :quantity="bottomQuantityBanners" 
+    :bannerData="bottomBannersRef" 
+    title="Нижні баннери"
+  />
+</div>
 </template>
-
 
 <style lang="scss" scoped>
 @import './BannersPage.scss';

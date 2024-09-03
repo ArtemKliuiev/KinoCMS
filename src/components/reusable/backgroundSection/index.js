@@ -1,0 +1,1 @@
+export { default as BackgroundSection } from './ui/BackgroundSection.vue'
