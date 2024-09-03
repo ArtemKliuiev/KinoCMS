@@ -21,6 +21,14 @@ if(props.bannerData){
   formBannerCard.value = props.bannerData
 } 
 
+watch(dialog, () => {
+  if(!dialog.value && props.empty){
+    formBannerCard.value.file = null
+    formBannerCard.value.title = ''
+    formBannerCard.value.url = ''
+  }
+})
+
 watch(props, () => {
   formBannerCard.value.id = props.quantity
 })
@@ -64,9 +72,13 @@ async function delBanner(){
       <v-sheet class="mx-auto pa-5 rounded">
         <v-form v-model="validForm" fast-fail @submit.prevent="addData">
           <h3 class="banner-card__dialog-title">
-            <span v-if="empty">Додати баннер</span>
+            <span v-if="empty && !background">Додати баннер</span>
 
-            <span v-else>Змінити баннер</span>
+            <span v-if="!empty && !background">Змінити баннер</span>
+
+            <span v-if="empty && background">Додати задній фон</span>
+
+            <span v-if="!empty && background">Змінити задній фон</span>
           </h3>
 
           <v-file-input v-if="empty" class="mb-2" v-model="formBannerCard.file" :rules="rules.necessarilyFile" accept="image/*" label="Завантажити зображення" variant="solo-filled"></v-file-input>
