@@ -1,11 +1,37 @@
 <script lang="ts" setup>
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/components/mixins";
+import { onMounted, ref } from 'vue';
+import { MainSlider } from "@/components/reusable";
+
+const topBannersShow = ref(false)
+const topBanners = ref([])
+
+onMounted(() => {
+  getBannersData()
+})
+
+
+async function getBannersData(){
+  const collectionRef = collection(db, "data");
+  const querySnapshot = await getDocs(collectionRef);
+
+  const allData = {};
+  querySnapshot.forEach((doc) => {
+    allData[doc.id] = doc.data();
+  });
+
+  topBannersShow.value = allData.dataBanners.top.switch
+  topBanners.value = allData.banners.top
+}
 
 
 </script>
 
+<template>
+  <MainSlider :banners="topBanners" :show="topBannersShow"/>
 
-
-<template>Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium, incidunt soluta tempora enim repellat,
+  Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium, incidunt soluta tempora enim repellat,
   aspernatur iure commodi impedit veritatis provident dolor, perspiciatis nemo qui. Esse provident ut sint eius maxime
   veritatis voluptatum odio. Unde rem omnis voluptate aperiam dicta, voluptatem corporis repellat facilis voluptas
   tempore repellendus perferendis placeat laudantium! Illo explicabo, illum accusamus nam, tempore fuga nostrum facere

@@ -5,7 +5,6 @@ import { db } from "@/components/mixins";
 import { onMounted, ref } from 'vue';
 import { BannersSection, BackgroundSection } from '@/components/reusable';
 
-const image = ref(null)
 const backgroundData = ref({})
 const topBannersRef = ref([])
 const bottomBannersRef = ref([])
@@ -34,7 +33,7 @@ async function inputFile(file, path){
 }
 
 function setBannersData(banners, data){
-  setDoc(doc(db, "data", "data-banners"), {
+  setDoc(doc(db, "data", "dataBanners"), {
     [banners]: {
       switch: data.switch,
       select: data.select
@@ -43,7 +42,7 @@ function setBannersData(banners, data){
 }
 
 async function getBannersData(){
-  const docRef = doc(db, "data", 'data-banners');
+  const docRef = doc(db, "data", 'dataBanners');
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
@@ -129,7 +128,7 @@ async function changeBannersTop(data){
     }
 
     delete data.file
-    data.imagePath = getUpdatedImageUrl(imagePath)
+    data.imagePath = imagePath
     topBanners[data.id] = {...data}
 
     await updateDoc(bannerDocRef, {
@@ -148,7 +147,7 @@ async function changeBannersBottom(data){
     }
 
     delete data.file
-    data.imagePath = getUpdatedImageUrl(imagePath)
+    data.imagePath = imagePath
     bottomBanners[data.id] = {...data}
 
     await updateDoc(bannerDocRef, {
@@ -224,10 +223,6 @@ async function deleteBackground(data){
   await getBackground()
 }
 
-function getUpdatedImageUrl(imageUrl) {
-  return `${imageUrl}?v=${new Date().getTime()}`;
-}
-
 function generateUniqueId() {
   return 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).substr(2, 9);
 }
@@ -261,7 +256,7 @@ function generateUniqueId() {
     :data="bottomBannersData"
     :quantity="bottomQuantityBanners" 
     :bannerData="bottomBannersRef" 
-    title="Нижні баннери"
+    title="Акції та новини"
   />
 </div>
 </template>

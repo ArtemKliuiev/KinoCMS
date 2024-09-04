@@ -2,6 +2,7 @@
 import { BaseSvg } from "@/components/base";
 import { ref, watch } from 'vue';
 import {adminValidationRules} from "@/components/mixins/index.js";
+import {BasePicture} from "@/components/base/index.js";
  
 const props = defineProps(['bannerData', 'aspectRatio', 'empty', 'quantity', 'background'])
 const emit = defineEmits([ 'change', 'add', 'delete'])
@@ -62,7 +63,7 @@ async function delBanner(){
     </div>
 
     <div v-else class="banner-card__default" :class="{'banner-card__default-bg' : background}">
-      <v-img cover eager height="100%" :src="formBannerCard.imagePath"></v-img>
+      <BasePicture :src="formBannerCard.imagePath"/>
     </div>
   </div>
 

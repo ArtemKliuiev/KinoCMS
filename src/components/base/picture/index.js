@@ -1,0 +1,1 @@
+export {default as BasePicture } from './ui/BasePicture.vue'
