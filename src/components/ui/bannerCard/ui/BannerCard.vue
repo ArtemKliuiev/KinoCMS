@@ -1,6 +1,6 @@
 <script setup>
 import { BaseSvg } from "@/components/base";
-import { ref, watch } from 'vue';
+import { ref, watch, onUpdated } from 'vue';
 import {adminValidationRules} from "@/components/mixins/index.js";
  
 const props = defineProps(['bannerData','empty', 'quantity'])
@@ -13,16 +13,19 @@ const formBannerCard = ref({
   file: null,
   title: '',
   url: '',
+  imagePath: '',
   id: props.quantity
 })
 
 if(props.bannerData){
   formBannerCard.value = props.bannerData
-} 
+}
 
 watch(props, () => {
   formBannerCard.value.id = props.quantity
 })
+
+
 
 function addData(){
   if(validForm.value){
@@ -40,8 +43,6 @@ function addData(){
 </script>
 
 <template>
-    {{formBannerCard}}
-
   <div  @click="dialog = true" class="banner-card">
     <div v-if="empty"  class="banner-card__empty">
 
@@ -49,7 +50,15 @@ function addData(){
     </div>
 
     <div v-else class="banner-card__default">
-      <img src="../../../../../public/960x540.jpg" alt="">
+<!--      <v-img-->
+<!--          width="100%"-->
+<!--          height="100%"-->
+<!--          class="no-transition"-->
+<!--          cover-->
+<!--          -->
+<!--      ></v-img>-->
+      <img :src="formBannerCard.imagePath">
+
     </div>
   </div>
 
@@ -88,4 +97,8 @@ function addData(){
 
 <style lang="scss" scoped>
 @import './BannerCard.scss';
+
+.no-transition {
+  transition: none !important; /* Отключение всех CSS переходов */
+}
 </style>

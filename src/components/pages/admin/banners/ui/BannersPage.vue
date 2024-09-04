@@ -7,8 +7,10 @@ import { BannersSection } from '@/components/reusable';
 import { da } from 'vuetify/locale';
 
 const image = ref(null)
-const topBanners = ref([])
+const topBannersRef = ref([])
+let topBanners = []
 const quantityBanners = ref(0)
+const bannerDocRef = doc(db, "data", "banners");
 
 onMounted(() => {
   getBanners()
@@ -16,8 +18,8 @@ onMounted(() => {
 
 async function inputFile(file, path, name){
   const storage = getStorage();
-  const storegeImages = storageRef(storage, path);
-  const fullPath = storageRef(storegeImages, name + '.jpg');
+  const storageImages = storageRef(storage, path);
+  const fullPath = storageRef(storageImages, name + '.jpg');
 
   await uploadBytes(fullPath, file)
 
@@ -30,17 +32,16 @@ async function getBanners(){
 
     if (docSnap.exists()) {
       const data = docSnap.data()
-      topBanners.value = data.top
+      topBannersRef.value = data.top
+      topBanners = data.top
       quantityBanners.value = data.top.length
     }
 }
 
 async function abbBannerTop(data) {
   const imagePath = await inputFile(data.file, 'top-banners', data.id)
-  console.log(data)
 
   try {
-    const bannerDocRef = doc(db, "data", "banners");
     await updateDoc(bannerDocRef, {
       top: arrayUnion({
         id: data.id,
@@ -48,7 +49,6 @@ async function abbBannerTop(data) {
         url: data.url,
         imagePath: imagePath
       })
-
     });
   } catch (error) {
     console.error("Error adding data to the array: ", error);
@@ -58,11 +58,20 @@ async function abbBannerTop(data) {
 }  
 
 async function changeTopBanners(data){
-    let imagePath = data.imagePath
+  if(data.file){
+    await inputFile(data.file, 'top-banners', data.id)
+  }
 
-    if(data.file){
-      imagePath = await inputFile(data.file, 'top-banners', data.id)
-    }
+  delete data.file
+  data.update = true
+
+  topBanners[data.id] = data
+
+  await updateDoc(bannerDocRef, {
+    top: topBanners
+  });
+
+  await getBanners()
 }
 
 </script>
@@ -71,7 +80,7 @@ async function changeTopBanners(data){
 
 
 
-<BannersSection @addBanner="abbBannerTop" @changeBanner="changeTopBanners" :quantity="quantityBanners" :bannerData="topBanners" title="Верхні баннери"/>
+<BannersSection @addBanner="abbBannerTop" @changeBanner="changeTopBanners" :quantity="quantityBanners" :bannerData="topBannersRef" title="Верхні баннери"/>
 
 <img :src="image" alt="">
 </template>

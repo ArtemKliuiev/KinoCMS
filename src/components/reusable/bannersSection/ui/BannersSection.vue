@@ -1,11 +1,14 @@
 <script setup>
 import { BannerCard } from "@/components/ui";
-import { computed, onMounted, ref  } from "vue";
+import {computed, onMounted, onUpdated, onBeforeUpdate, ref, watch} from "vue";
 
 const props = defineProps(['title', 'bannerData', 'quantity'])
 const emit = defineEmits(['addBanner', 'changeBanner'])
 
 const switchInfo = ref(false)
+const preloader = ref(false)
+
+
 
 // const arr = ref(props.bannerData)
 const arr = computed(() => {
@@ -17,21 +20,23 @@ const arr = computed(() => {
             title: banner.title,
             url:  banner.url,
             id: banner.id,
-            imagePath: banner.imagePath
+            imagePath: getUpdatedImageUrl(banner.imagePath)
         })
     });
 
-console.log(bannerArr)
-
     return bannerArr
 })
+
+function getUpdatedImageUrl(imageUrl) {
+  return `${imageUrl}?v=${new Date().getTime()}`;
+}
 
 
 </script>
 
 <template> 
 
-{{ quantity }}
+{{ preloader }}
     <div class="banners-section">
         <div class="banners-section__top-line">
             <h2 class="banners-section__title"> {{ title }} </h2>
@@ -44,7 +49,7 @@ console.log(bannerArr)
         </div>
 
 
-        <div class="banners-section__banners">
+        <div class="banners-section__banners" :class="{'red': preloader}">
             <BannerCard v-for="(item, index) in arr" :key="item" @change="(data) => $emit('changeBanner', data)" :bannerData="arr[index]" />
 
             <BannerCard v-if="quantity < 4" @add="(data) => $emit('addBanner', data)" :quantity="quantity"  empty="true"/>
@@ -65,4 +70,7 @@ console.log(bannerArr)
 
 <style lang="scss" scoped>
 @import './BannersSection.scss';
+.red{
+  background-color: red;
+}
 </style>
