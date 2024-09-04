@@ -12,8 +12,9 @@
   }
 
   &__main {
-    margin-top: 117px;
+    margin-top: 107px;
     grid-row: 1;
+    background-repeat: repeat;
 
     @include media-breakpoint-down(md) {
       margin-top: 65px;

@@ -33,8 +33,7 @@ async function getBannersData(){
 </script>
 
 <template>
-  <MainSlider :banners="topBanners" :data="topBannersData"/>
-
+  <MainSlider :banners="topBanners" :data="topBannersData" position="top"/>
 
   <div class="text">
     Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium, incidunt soluta tempora enim repellat,
@@ -238,7 +237,7 @@ async function getBannersData(){
     Numquam nam saepe veniam optio dolore molestias minus fuga minima, quasi beatae impedit?
   </div>
 
-  <MainSlider :banners="bottomBanners" :data="bottomBannersData"/>
+  <MainSlider :banners="bottomBanners" :data="bottomBannersData" position="bottom"/>
 
 
 </template>
