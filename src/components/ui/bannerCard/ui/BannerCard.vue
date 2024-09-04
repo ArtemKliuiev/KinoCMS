@@ -87,7 +87,7 @@ async function delBanner(){
 
           <v-file-input v-if="!empty && background" class="mb-2" v-model="formBannerCard.file" :rules="rules.necessarilyFile" accept="image/*" label="Завантажити нове зображення" variant="solo-filled"></v-file-input>
 
-          <v-text-field v-if="!background" class="mb-2" v-model="formBannerCard.title" :rules="rules.title" variant="solo-filled"
+          <v-text-field v-if="!background" maxlength="80" class="mb-2" v-model="formBannerCard.title" :rules="rules.title" variant="solo-filled"
             label="Заголовок"></v-text-field>
 
           <v-text-field v-if="!background" class="mb-2" v-model="formBannerCard.url" :rules="rules.url" variant="solo-filled"
