@@ -26,20 +26,28 @@ watch(props, () => {
   formBannerCard.value.id = props.quantity
 
   if(props.empty){
-    console.log('clean')
-    formBannerCard.value.file = null
-    formBannerCard.value.title = ''
-    formBannerCard.value.url = ''
+    cleanForm()
   }
 })
+
+function cleanForm(){
+  formBannerCard.value.file = null
+  formBannerCard.value.title = ''
+  formBannerCard.value.url = ''
+}
 
 function addData(){
   if(validForm.value){
     if(props.empty){
       emit('add', formBannerCard.value)
-
     }else{
       emit('change', formBannerCard.value)
+    }
+
+    if(props.background){
+      setTimeout(() => {
+        cleanForm()
+      },0)
     }
 
     dialog.value = false
