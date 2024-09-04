@@ -1,9 +1,13 @@
 @import '@/assets/styles/styles';
 
 .banner-card{
-  aspect-ratio: 1/1;
   width: 100%;
+  height: 100%;
   cursor: pointer;
+
+  &-aspect{
+    aspect-ratio: 1/1;
+  }
 
   &__empty{
     width: 100%;
@@ -19,12 +23,12 @@
       transform 300ms ease ;
 
     &:active{
-      transform: scale(0.98);
+      transform: scale(0.99);
     }
 
     &-icon{
-      width: 60%;
-      aspect-ratio: 1/1;
+      width: 100%;
+      
       fill: $text-color;
     }
 
@@ -51,12 +55,26 @@
     }
 
     &:active{
-      transform: scale(0.98);
+      transform: scale(0.99);
+    }
+
+    &-bg{
+      &:hover{
+        transform: scale(1.005);
+      }
+
+      &:active{
+        transform: scale(0.995);
+      }
     }
   }
 
   &__dialog{
     width: 500px;
+    
+  @include media-breakpoint-down(xs) {
+    width: 85vw;
+  }
 
     &-title{
       text-align: center;

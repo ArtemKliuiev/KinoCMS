@@ -1,6 +1,6 @@
 @import '@/assets/styles/styles';
 
-.banners-section{
+.background-section{
     background-color: $grayOne;
     border-radius: 5px;
     padding: 10px;
@@ -11,22 +11,16 @@
     }
 
     &__banners{
+        height: 30vw;
         position: relative;
-        display: grid;
-        grid-template: auto / 1fr 1fr 1fr 1fr;
-        margin-bottom: 10px;
-        gap: 10px;
 
-        @include media-breakpoint-down(sm) {
-            grid-template: auto / 1fr 1fr ;
-        }
-
-        @include media-breakpoint-down(sm) {
-            grid-template: auto / 1fr 1fr ;
+        @include media-breakpoint-down(md) {
+            height: 50vw;
         }
 
         @include media-breakpoint-down(xs) {
-            grid-template: auto / 1fr;
+            height: unset;
+            aspect-ratio: 1/1;
         }
 
         &-preloader{
@@ -50,8 +44,6 @@
                 height: 102%;
                 background-color: $grayOne;   
             }
-
-
         }
     }
 
