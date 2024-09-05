@@ -12,7 +12,10 @@ const validForm = ref(false)
 const dialog = ref(false)
 const formBannerCard = ref({
   file: null,
-  title: '',
+  title: {
+    uk: '',
+    ru: ''
+  },
   url: '',
   imagePath: '',
   id: props.quantity
@@ -32,7 +35,8 @@ watch(props, () => {
 
 function cleanForm(){
   formBannerCard.value.file = null
-  formBannerCard.value.title = ''
+  formBannerCard.value.title.uk = ''
+    formBannerCard.value.title.ru = ''
   formBannerCard.value.url = ''
 }
 
@@ -95,8 +99,11 @@ async function delBanner(){
 
           <v-file-input v-if="!empty && background" class="mb-2" v-model="formBannerCard.file" :rules="rules.necessarilyFile" accept="image/*" label="Завантажити нове зображення" variant="solo-filled"></v-file-input>
 
-          <v-text-field v-if="!background" maxlength="80" class="mb-2" v-model="formBannerCard.title" :rules="rules.title" variant="solo-filled"
-            label="Заголовок"></v-text-field>
+          <v-text-field v-if="!background" maxlength="80" class="mb-2" v-model="formBannerCard.title.uk" :rules="rules.title" variant="solo-filled"
+            label="Заголовок(UA)"></v-text-field>
+
+          <v-text-field v-if="!background" maxlength="80" class="mb-2" v-model="formBannerCard.title.ru" :rules="rules.title" variant="solo-filled"
+          label="Заголовок(RU)"></v-text-field>
 
           <v-text-field v-if="!background" class="mb-2" v-model="formBannerCard.url" :rules="rules.url" variant="solo-filled"
             label="URL"></v-text-field>

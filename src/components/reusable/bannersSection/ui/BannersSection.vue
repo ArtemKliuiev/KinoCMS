@@ -6,6 +6,7 @@ const props = defineProps(['title', 'bannerData', 'quantity', 'data'])
 const emit = defineEmits(['addBanner', 'changeBanner', 'delete', 'changeData'])
 
 const preloader = ref(false)
+const switchDisabled = ref(true)
 const bannersData = reactive({
     select: '',
     switch: false
@@ -35,7 +36,10 @@ const arr = computed(() => {
     props.bannerData.forEach(banner => {
         bannerArr.push({
             file: null,
-            title: banner.title,
+            title: {
+                uk: banner.title.uk,
+                ru: banner.title.ru
+            }, 
             url:  banner.url,
             id: banner.id,
             imagePath: banner.imagePath
@@ -47,6 +51,14 @@ const arr = computed(() => {
 
 watch(arr, () => {
     preloader.value = false
+
+    if(arr.value.length !== 0){
+        bannersData.switch = true
+        switchDisabled.value = false
+    }else{
+        bannersData.switch = false
+        switchDisabled.value = true
+    }
 })
 </script>
 
@@ -58,6 +70,7 @@ watch(arr, () => {
             <v-switch
                 v-model="bannersData.switch"
                 color="#388e3c"
+                :disabled="switchDisabled"
                 hide-details
                 >
             </v-switch>

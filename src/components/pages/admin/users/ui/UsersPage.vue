@@ -8,6 +8,7 @@ import { computed, onMounted, ref } from "vue";
 const router = useRouter()
 const search = ref('')
 const users = ref([])
+const skeleton = ref(true)
 
 onMounted(() => {
   getUsersData()
@@ -24,22 +25,30 @@ const headers = [
 
 const desserts = computed(() => {
   const arr = []
-  users.value.forEach(item => {
-    let name = item.mainFormData?.name
 
-    if (item.mainFormData?.lastName) {
-      name = name + ' ' + item.mainFormData.lastName
+  if(users.value.length === 0){
+    for(let i = 0; i < 10; i++){
+      arr.push(null)
     }
+  }else{
+    users.value.forEach(item => {
+      let name = item.mainFormData?.name
 
-    arr.push({
-      name: name,
-      city: item.mainFormData?.city,
-      phone: item.mainFormData?.phone,
-      birthday: item.mainFormData?.birthday,
-      sex: item.mainFormData?.sex,
-      edit: item.uid
+      if (item.mainFormData?.lastName) {
+        name = name + ' ' + item.mainFormData.lastName
+      }
+
+      arr.push({
+        name: name,
+        city: item.mainFormData?.city,
+        phone: item.mainFormData?.phone,
+        birthday: item.mainFormData?.birthday,
+        sex: item.mainFormData?.sex,
+        edit: item.uid
+      })
     })
-  })
+  }
+
 
   return arr
 })
@@ -49,6 +58,8 @@ async function getUsersData() {
   querySnapshot.forEach((doc) => {
     users.value.push({ ...doc.data() });
   });
+
+  skeleton.value = false
 }
 
 function navigateToPage(uid) {
@@ -67,6 +78,26 @@ function navigateToPage(uid) {
           single-line></v-text-field>
 
         <v-data-table :headers="headers" :items="desserts" item-class="text-center" :search="search" dense>
+          <template v-if="skeleton" class="v-data-table-column--align-center" v-slot:[`item.name`]="{ item }">
+            <v-skeleton-loader width="100%" type="text"></v-skeleton-loader>
+          </template>
+
+          <template v-if="skeleton" class="v-data-table-column--align-center" v-slot:[`item.city`]="{ item }">
+            <v-skeleton-loader width="100%" type="text"></v-skeleton-loader>
+          </template>
+
+          <template v-if="skeleton" class="v-data-table-column--align-center" v-slot:[`item.phone`]="{ item }">
+            <v-skeleton-loader width="100%" type="text"></v-skeleton-loader>
+          </template>
+
+          <template v-if="skeleton" class="v-data-table-column--align-center" v-slot:[`item.birthday`]="{ item }">
+            <v-skeleton-loader width="100%" type="text"></v-skeleton-loader>
+          </template>
+
+          <template v-if="skeleton" class="v-data-table-column--align-center" v-slot:[`item.sex`]="{ item }">
+            <v-skeleton-loader width="100%" type="text"></v-skeleton-loader>
+          </template>
+
           <template class="v-data-table-column--align-center" v-slot:[`item.edit`]="{ item }">
 
             <div class="users__btn">

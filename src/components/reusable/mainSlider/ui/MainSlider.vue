@@ -1,7 +1,9 @@
 <script setup>
 import {BaseButtonText, BasePicture} from "@/components/base/index.js";
 import {computed, ref} from "vue";
+import { useI18n } from 'vue-i18n'
 
+const { locale } = useI18n()
 const props = defineProps(['banners', 'data', 'position'])
 const isCycling = ref(true)
 
@@ -29,7 +31,7 @@ const interval = computed(() => {
           <v-carousel-item v-for="banner in banners" :key="banner">
             <BaseButtonText :to="banner.url">
               <div class="main-slider__card">
-                <h3 class="main-slider__card-title"> {{ banner.title }} </h3>
+                <h3 class="main-slider__card-title"> {{ banner.title[locale] }} </h3>
 
                 <div class="main-slider__image">
                   <BasePicture :src="banner.imagePath"/>
