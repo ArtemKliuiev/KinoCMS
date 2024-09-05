@@ -11,6 +11,8 @@ import { useScrollLock, useObjectsEqual, useDateFormat } from "@/components/comp
 const { t } = useI18n()
 const router = useRouter()
 const auth = getAuth();
+const mainFormSkeleton = ref(true)
+const contactsFormSkeleton = ref(true)
 const mainDataFormValid = ref(false);
 const contactsDataFormValid = ref(false);
 const signValid = ref(false);
@@ -89,7 +91,8 @@ async function getMainFormData() {
 
     if (data) {
       mainFormData.value = data
-      mainFirebaseData = docSnap.data().mainFormData
+      mainFirebaseData = docSnap.data().mainFormData 
+      mainFormSkeleton.value = false
 
       if (data.birthday) {
         date.value = new Date(mainFirebaseData.birthday)
@@ -105,9 +108,14 @@ async function getContactsFormData() {
 
   cleanContactsForm()
 
+  if(docSnap.data()){
+    contactsFormSkeleton.value = false
+  }
+
   if (docSnap.data().contactsFormData?.spareEmail) {
     contactsData.value.spareEmail = docSnap.data().contactsFormData.spareEmail
     contactsFirebaseData.spareEmail = docSnap.data().contactsFormData.spareEmail
+
   }
 
   if (user) {
@@ -266,60 +274,104 @@ function submitFormSingIn() {
             <v-container>
               <h2 class="profile__form-title">{{ t('pages.profile.form.title.one') }}</h2>
 
-              <v-row>
-                <v-col cols="12" md="6">
-                  <v-text-field v-model="mainFormData.name" :rules="rules.name" :label="t('pages.profile.form.name')"
-                    required variant="solo-filled"></v-text-field>
-                </v-col>
+              <div v-if="mainFormSkeleton" class="profile__skeleton">
+                <v-row >
+                  <v-col cols="12" md="6" class="mb-5">
+                    <v-skeleton-loader width="100%" height="56px" ></v-skeleton-loader>
+                  </v-col>
 
-                <v-col cols="12" md="6">
-                  <v-text-field v-model="mainFormData.lastName" :rules="rules.name"
-                    :label="t('pages.profile.form.lastName')" required variant="solo-filled"></v-text-field>
-                </v-col>
-              </v-row>
+                  <v-col cols="12" md="6" class="mb-5">
+                    <v-skeleton-loader width="100%" height="56px" ></v-skeleton-loader>
+                  </v-col>
+                </v-row>
 
-              <v-row>
-                <v-col cols="12" md="6">
-                  <v-text-field v-model="mainFormData.nickName" :rules="rules.nickname"
-                    :label="t('pages.profile.form.nickName')" required variant="solo-filled"></v-text-field>
-                </v-col>
+                <v-row >
+                  <v-col cols="12" md="6" class="mb-5">
+                    <v-skeleton-loader width="100%" height="56px" ></v-skeleton-loader>
+                  </v-col>
 
-                <v-col cols="12" md="6">
-                  <v-text-field v-model="mainFormData.phone" :rules="rules.phone" :label="t('pages.profile.form.phone')"
-                    required variant="solo-filled"></v-text-field>
-                </v-col>
-              </v-row>
+                  <v-col cols="12" md="6" class="mb-5">
+                    <v-skeleton-loader width="100%" height="56px"></v-skeleton-loader>
+                  </v-col>
+                </v-row>
 
-              <v-row>
-                <v-col cols=" 12" md="6">
-                  <v-text-field v-model="mainFormData.address" :rules="rules.address"
-                    :label="t('pages.profile.form.address')" required variant="solo-filled"></v-text-field>
-                </v-col>
+                <v-row >
+                  <v-col cols="12" md="6" class="mb-5">
+                    <v-skeleton-loader width="100%" height="56px"></v-skeleton-loader>
+                  </v-col>
 
-                <v-col cols="12" md="6">
-                  <v-text-field @focus="dateDialog = true" v-model="dateFormat"
-                    :label="t('pages.profile.form.birthday')" required variant="solo-filled"></v-text-field>
-                </v-col>
-              </v-row>
+                  <v-col cols="12" md="6" class="mb-5">
+                    <v-skeleton-loader width="100%" height="56px"></v-skeleton-loader>
+                  </v-col>
+                </v-row>
 
-              <v-row>
-                <v-col cols="12" md="6">
-                  <v-select :label="t('pages.profile.form.sex.title')" v-model="mainFormData.sex"
-                    :items="[t('pages.profile.form.sex.one'), t('pages.profile.form.sex.two')]"
-                    variant="solo-filled"></v-select>
-                </v-col>
+                <v-row >
+                  <v-col cols="12" md="6" class="mb-4">
+                    <v-skeleton-loader width="100%" height="56px"></v-skeleton-loader>
+                  </v-col>
 
-                <v-col cols="12" md="6">
-                  <v-select v-model="mainFormData.city" :label="t('pages.profile.form.city.title')" :items="[
-                    t('pages.profile.form.city.kyiv'),
-                    t('pages.profile.form.city.lviv'),
-                    t('pages.profile.form.city.odessa'),
-                    t('pages.profile.form.city.dnipro'),
-                    t('pages.profile.form.city.kharkiv'),
-                  ]" variant="solo-filled">
-                  </v-select>
-                </v-col>
-              </v-row>
+                  <v-col cols="12" md="6" class="mb-4">
+                    <v-skeleton-loader width="100%" height="56px" class="mb-3"></v-skeleton-loader>
+                  </v-col>
+                </v-row>
+              </div>
+
+              <div v-else class="profile__form">
+                <v-row>
+                  <v-col cols="12" md="6">
+                    <v-text-field v-model="mainFormData.name" :rules="rules.name" :label="t('pages.profile.form.name')"
+                      required variant="solo-filled"></v-text-field>
+                  </v-col>
+
+                  <v-col cols="12" md="6">
+                    <v-text-field v-model="mainFormData.lastName" :rules="rules.name"
+                      :label="t('pages.profile.form.lastName')" required variant="solo-filled"></v-text-field>
+                  </v-col>
+                </v-row>
+
+                <v-row>
+                  <v-col cols="12" md="6">
+                    <v-text-field v-model="mainFormData.nickName" :rules="rules.nickname"
+                      :label="t('pages.profile.form.nickName')" required variant="solo-filled"></v-text-field>
+                  </v-col>
+
+                  <v-col cols="12" md="6">
+                    <v-text-field v-model="mainFormData.phone" :rules="rules.phone" :label="t('pages.profile.form.phone')"
+                      required variant="solo-filled"></v-text-field>
+                  </v-col>
+                </v-row>
+
+                <v-row>
+                  <v-col cols=" 12" md="6">
+                    <v-text-field v-model="mainFormData.address" :rules="rules.address"
+                      :label="t('pages.profile.form.address')" required variant="solo-filled"></v-text-field>
+                  </v-col>
+
+                  <v-col cols="12" md="6">
+                    <v-text-field @focus="dateDialog = true" v-model="dateFormat"
+                      :label="t('pages.profile.form.birthday')" required variant="solo-filled"></v-text-field>
+                  </v-col>
+                </v-row>
+
+                <v-row>
+                  <v-col cols="12" md="6">
+                    <v-select :label="t('pages.profile.form.sex.title')" v-model="mainFormData.sex"
+                      :items="[t('pages.profile.form.sex.one'), t('pages.profile.form.sex.two')]"
+                      variant="solo-filled"></v-select>
+                  </v-col>
+
+                  <v-col cols="12" md="6">
+                    <v-select v-model="mainFormData.city" :label="t('pages.profile.form.city.title')" :items="[
+                      t('pages.profile.form.city.kyiv'),
+                      t('pages.profile.form.city.lviv'),
+                      t('pages.profile.form.city.odessa'),
+                      t('pages.profile.form.city.dnipro'),
+                      t('pages.profile.form.city.kharkiv'),
+                    ]" variant="solo-filled">
+                    </v-select>
+                  </v-col>
+                </v-row>
+              </div>
 
               <v-btn color="#2a2a2a" class="mt-5" type="submit" block>{{ t('pages.profile.saveBtn')
                 }}</v-btn>
@@ -332,31 +384,56 @@ function submitFormSingIn() {
             <v-container>
               <h2 class="profile__form-title">{{ t('pages.profile.form.title.two') }}</h2>
 
-              <v-row>
-                <v-col cols=" 12" md="6">
-                  <v-text-field v-model="contactsData.email" :rules="rules.email" :label="t('pages.profile.form.email')"
-                    variant="solo-filled"></v-text-field>
-                </v-col>
+              <div v-if="contactsFormSkeleton" class="profile__skeleton">
+                <v-row>
+                  <v-col cols="12" md="6" class="mb-5">
+                    <v-skeleton-loader width="100%" height="56px" ></v-skeleton-loader>
+                  </v-col>
 
-                <v-col cols=" 12" md="6">
-                  <v-text-field v-model="contactsData.spareEmail" :rules="rules.spareEmail"
-                    :label="t('pages.profile.form.spareEmail')" variant="solo-filled"></v-text-field>
-                </v-col>
-              </v-row>
+                  <v-col cols="12" md="6" class="mb-5">
+                    <v-skeleton-loader width="100%" height="56px" ></v-skeleton-loader>
+                  </v-col>
+                </v-row>
 
-              <v-row>
-                <v-col cols="12" md="6">
-                  <v-text-field v-model="contactsData.password" type="password" :rules="rules.password"
-                    :label="t('pages.profile.form.password')" variant="solo-filled">
-                  </v-text-field>
-                </v-col>
+                <v-row >
+                  <v-col cols="12" md="6" class="mb-5">
+                    <v-skeleton-loader width="100%" height="56px" ></v-skeleton-loader>
+                  </v-col>
 
-                <v-col cols="12" md="6">
-                  <v-text-field v-model="contactsData.nextPassword" type="password" :rules="rules.nextPassword"
-                    :label="t('pages.profile.form.nextPassword')" variant="solo-filled">
-                  </v-text-field>
-                </v-col>
-              </v-row>
+                  <v-col cols="12" md="6" class="mb-6">
+                    <v-skeleton-loader width="100%" height="56px"></v-skeleton-loader>
+                  </v-col>
+                </v-row>
+              </div>
+
+              <div v-else class="profile__form">
+                <v-row>
+                  <v-col cols=" 12" md="6">
+                    <v-text-field v-model="contactsData.email" :rules="rules.email" :label="t('pages.profile.form.email')"
+                      variant="solo-filled"></v-text-field>
+                  </v-col>
+
+                  <v-col cols=" 12" md="6">
+                    <v-text-field v-model="contactsData.spareEmail" :rules="rules.spareEmail"
+                      :label="t('pages.profile.form.spareEmail')" variant="solo-filled"></v-text-field>
+                  </v-col>
+                </v-row>
+
+                <v-row>
+                  <v-col cols="12" md="6">
+                    <v-text-field v-model="contactsData.password" type="password" :rules="rules.password"
+                      :label="t('pages.profile.form.password')" variant="solo-filled">
+                    </v-text-field>
+                  </v-col>
+
+                  <v-col cols="12" md="6">
+                    <v-text-field v-model="contactsData.nextPassword" type="password" :rules="rules.nextPassword"
+                      :label="t('pages.profile.form.nextPassword')" variant="solo-filled">
+                    </v-text-field>
+                  </v-col>
+                </v-row>
+              </div>
+
 
               <v-btn color="#2a2a2a" class="mt-5" type="submit" block>{{ t('pages.profile.saveBtn') }}</v-btn>
 

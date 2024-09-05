@@ -11,6 +11,7 @@ const rules = adminValidationRules()
 const route = useRoute();
 const uid = route.params.uid;
 const userFormValid = ref(false)
+const skeleton = ref(true)
 const dateDialog = ref(false)
 const date = ref(new Date())
 const snackbar = ref(false)
@@ -65,6 +66,7 @@ async function getUserData() {
         if (data) {
             userFormData.value = data
             userFirebaseData = docSnap.data().mainFormData
+            skeleton.value = false
 
             if (data.birthday) {
                 date.value = new Date(userFirebaseData.birthday)
@@ -110,59 +112,103 @@ function submitUserFormValid() {
             <v-sheet class="mx-auto rounded">
                 <v-form v-model="userFormValid" fast-fail @submit.prevent="submitUserFormValid">
                     <v-container>
-                        <v-row>
-                            <v-col cols="12" md="6">
-                                <v-text-field v-model="userFormData.name" :rules="rules.name" label="Ім'я" required
-                                    variant="solo-filled"></v-text-field>
-                            </v-col>
+                        <div v-if="skeleton" class="user__form-skeleton">
+                            <v-row >
+                                <v-col cols="12" md="6" class="mb-6">
+                                    <v-skeleton-loader width="100%" height="56px" ></v-skeleton-loader>
+                                </v-col>
 
-                            <v-col cols="12" md="6">
-                                <v-text-field v-model="userFormData.lastName" :rules="rules.name" label="Прізвище"
-                                    required variant="solo-filled"></v-text-field>
-                            </v-col>
-                        </v-row>
+                                <v-col cols="12" md="6" class="mb-6">
+                                    <v-skeleton-loader width="100%" height="56px" ></v-skeleton-loader>
+                                </v-col>
+                            </v-row>
 
-                        <v-row>
-                            <v-col cols="12" md="6">
-                                <v-text-field v-model="userFormData.nickName" :rules="rules.nickname" label="nickname"
-                                    required variant="solo-filled"></v-text-field>
-                            </v-col>
+                            <v-row >
+                                <v-col cols="12" md="6" class="mb-5">
+                                    <v-skeleton-loader width="100%" height="56px" ></v-skeleton-loader>
+                                </v-col>
 
-                            <v-col cols="12" md="6">
-                                <v-text-field v-model="userFormData.phone" :rules="rules.phone" label="Телефон" required
-                                    variant="solo-filled"></v-text-field>
-                            </v-col>
-                        </v-row>
+                                <v-col cols="12" md="6" class="mb-5">
+                                    <v-skeleton-loader width="100%" height="56px"></v-skeleton-loader>
+                                </v-col>
+                            </v-row>
 
-                        <v-row>
-                            <v-col cols=" 12" md="6">
-                                <v-text-field v-model="userFormData.address" :rules="rules.address" label="Адреса"
-                                    required variant="solo-filled"></v-text-field>
-                            </v-col>
+                            <v-row >
+                                <v-col cols="12" md="6" class="mb-6">
+                                    <v-skeleton-loader width="100%" height="56px" ></v-skeleton-loader>
+                                </v-col>
 
-                            <v-col cols="12" md="6">
-                                <v-text-field @focus="dateDialog = true" v-model="dateFormat" label="День народження"
-                                    required variant="solo-filled"></v-text-field>
-                            </v-col>
-                        </v-row>
+                                <v-col cols="12" md="6" class="mb-6">
+                                    <v-skeleton-loader width="100%" height="56px" ></v-skeleton-loader>
+                                </v-col>
+                            </v-row>
 
-                        <v-row>
-                            <v-col cols="12" md="6">
-                                <v-select label="Стать" v-model="userFormData.sex" :items="['Чоловік', 'Жінка']"
-                                    variant="solo-filled"></v-select>
-                            </v-col>
+                            <v-row >
+                                <v-col cols="12" md="6" class="mb-7">
+                                    <v-skeleton-loader width="100%" height="56px" ></v-skeleton-loader>
+                                </v-col>
 
-                            <v-col cols="12" md="6">
-                                <v-select v-model="userFormData.city" label="Місто" :items="[
-                                    'Київ',
-                                    'Львів',
-                                    'Одеса',
-                                    'Дніпро',
-                                    'Харків',
-                                ]" variant="solo-filled">
-                                </v-select>
-                            </v-col>
-                        </v-row>
+                                <v-col cols="12" md="6" class="mb-7">
+                                    <v-skeleton-loader width="100%" height="56px" ></v-skeleton-loader>
+                                </v-col>
+                            </v-row>
+                        </div>
+
+                        <div v-else class="user__form-main">
+                            <v-row>
+                                <v-col cols="12" md="6">
+                                    <v-text-field v-model="userFormData.name" :rules="rules.name" label="Ім'я" required
+                                        variant="solo-filled"></v-text-field>
+                                </v-col>
+
+                                <v-col cols="12" md="6">
+                                    <v-text-field v-model="userFormData.lastName" :rules="rules.name" label="Прізвище"
+                                        required variant="solo-filled"></v-text-field>
+                                </v-col>
+                            </v-row>
+
+                            <v-row>
+                                <v-col cols="12" md="6">
+                                    <v-text-field v-model="userFormData.nickName" :rules="rules.nickname" label="nickname"
+                                        required variant="solo-filled"></v-text-field>
+                                </v-col>
+
+                                <v-col cols="12" md="6">
+                                    <v-text-field v-model="userFormData.phone" :rules="rules.phone" label="Телефон" required
+                                        variant="solo-filled"></v-text-field>
+                                </v-col>
+                            </v-row>
+
+                            <v-row>
+                                <v-col cols=" 12" md="6">
+                                    <v-text-field v-model="userFormData.address" :rules="rules.address" label="Адреса"
+                                        required variant="solo-filled"></v-text-field>
+                                </v-col>
+
+                                <v-col cols="12" md="6">
+                                    <v-text-field @focus="dateDialog = true" v-model="dateFormat" label="День народження"
+                                        required variant="solo-filled"></v-text-field>
+                                </v-col>
+                            </v-row>
+
+                            <v-row>
+                                <v-col cols="12" md="6">
+                                    <v-select label="Стать" v-model="userFormData.sex" :items="['Чоловік', 'Жінка']"
+                                        variant="solo-filled"></v-select>
+                                </v-col>
+
+                                <v-col cols="12" md="6">
+                                    <v-select v-model="userFormData.city" label="Місто" :items="[
+                                        'Київ',
+                                        'Львів',
+                                        'Одеса',
+                                        'Дніпро',
+                                        'Харків',
+                                    ]" variant="solo-filled">
+                                    </v-select>
+                                </v-col>
+                            </v-row>
+                        </div>
 
                         <v-btn color="#2a2a2a" class="mt-5" type="submit" block> Зберегти </v-btn>
                     </v-container>
