@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/components/mixins";
+import { db, piniaStorage } from "@/components/mixins";
 import { onMounted, ref } from 'vue';
 import { MainSlider } from "@/components/reusable";
 
+const storage = piniaStorage()
 const topBannersData = ref(false)
 const topBanners = ref([])
 const bottomBannersData = ref(false)
@@ -27,13 +28,15 @@ async function getBannersData(){
   topBanners.value = allData.banners.top
   bottomBannersData.value = allData.dataBanners.bottom
   bottomBanners.value = allData.banners.bottom
+
+  storage.preloader = false
 }
 
 
 </script>
 
 <template>
-  <MainSlider :banners="topBanners" :data="topBannersData" position="top"/>
+  <MainSlider v-if="topBannersData.switch" :banners="topBanners" :data="topBannersData" position="top"/>
 
   <div class="text">
     Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium, incidunt soluta tempora enim repellat,
@@ -121,9 +124,7 @@ async function getBannersData(){
     praesentium voluptatem accusantium sequi iste nulla aperiam dolorem. Magnam, tenetur? Repudiandae sint officia
   </div>
 
-  <MainSlider :banners="bottomBanners" :data="bottomBannersData" position="bottom"/>
-
-
+  <MainSlider v-if="bottomBannersData.switch" :banners="bottomBanners" :data="bottomBannersData" position="bottom"/>
 </template>
 
 <style lang="scss" scoped>

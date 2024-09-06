@@ -1,0 +1,1 @@
+export { piniaStorage } from './piniaStorage'

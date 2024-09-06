@@ -4,12 +4,13 @@ import { useRouter } from 'vue-router';
 import { useI18n } from "vue-i18n";
 import { getAuth, signOut, updatePassword, updateProfile, updateEmail } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { validationRules, db, getUser, refreshSign } from "@/components/mixins";
+import { validationRules, db, getUser, refreshSign, piniaStorage } from "@/components/mixins";
 import { useScrollLock, useObjectsEqual, useDateFormat } from "@/components/composable";
 
 
 const { t } = useI18n()
 const router = useRouter()
+const storage = piniaStorage()
 const auth = getAuth();
 const mainFormSkeleton = ref(true)
 const contactsFormSkeleton = ref(true)
@@ -99,6 +100,8 @@ async function getMainFormData() {
       }
     }
   }
+
+  storage.preloader = false
 }
 
 async function getContactsFormData() {

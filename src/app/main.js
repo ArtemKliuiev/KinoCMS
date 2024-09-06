@@ -8,6 +8,7 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import '@mdi/font/css/materialdesignicons.css';
 import {useLocalStorage} from "@/components/composable/index.js";
+import { createPinia } from 'pinia'
 import { i18n } from "@/I18n";
 import { uk, ru } from 'vuetify/locale'
 
@@ -32,10 +33,11 @@ const vuetify = createVuetify({
   },
 })
 
+const pinia = createPinia()
 
 createApp(App)
   .use(i18n)
   .use(router)
   .use(vuetify)
+  .use(pinia)
   .mount('#app')
-

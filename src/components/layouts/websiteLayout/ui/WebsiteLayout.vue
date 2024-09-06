@@ -1,14 +1,29 @@
 <script setup>
 import { WebsiteHeader, WebsiteFooter } from '@/components/base'
+import { useRoute} from 'vue-router'
+import { useScrollLock } from "@/components/composable";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/components/mixins";
-import { onMounted, ref } from 'vue';
+import { db, piniaStorage } from "@/components/mixins";
+import { onMounted, ref, watch } from 'vue';
 
+const storage = piniaStorage()
 const backgroundUrl = ref('')
 const backgroundSwitch = ref(false)
+const route = useRoute()
 
 onMounted(() => {
   getBackground()
+  useScrollLock(true)
+})
+
+watch(() => route.fullPath, () => {
+    storage.preloader = true
+    useScrollLock(true)
+  }
+);
+
+watch(storage, () => {
+  useScrollLock(storage.preloader)
 })
 
 
@@ -21,8 +36,9 @@ async function getBackground(){
     allData[doc.id] = doc.data();
   });
 
-  console.log(allData.background)
   backgroundUrl.value = allData.background.imagePath
+  backgroundSwitch.value = allData.background.switch
+
 }
 </script>
 
@@ -36,7 +52,21 @@ async function getBackground(){
     </slot>
 
     <slot name="main">
-      <main class="site-layout__main main" :style="{ backgroundImage: `url(${backgroundUrl}) ` }">
+      <main v-if="backgroundSwitch" class="site-layout__main main" :style="{ backgroundImage: `url(${backgroundUrl}) ` }">
+        <div v-if="storage.preloader" class="site-layout__preloader">
+          <v-progress-circular indeterminate ></v-progress-circular>
+        </div>
+
+        <div class="container" >
+          <router-view />
+        </div>
+      </main>
+
+      <main v-else class="site-layout__main main">
+        <div v-if="storage.preloader" class="site-layout__preloader">
+          <v-progress-circular indeterminate ></v-progress-circular>
+        </div>
+
         <div class="container" >
           <router-view />
         </div>
