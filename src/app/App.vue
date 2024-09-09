@@ -22,8 +22,6 @@ import SvgManager from "@/components/base/svg/SvgManager.vue";
 const route = useRoute()
 
 const layout = computed(() => route.meta.layout || AdminLayout)
-
-
 </script>
 
 <style lang="scss" scoped></style>

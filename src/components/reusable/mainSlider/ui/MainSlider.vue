@@ -14,6 +14,7 @@ const interval = computed(() => {
 
   return 5000
 })
+
 </script>
 
 <template>
@@ -44,9 +45,6 @@ const interval = computed(() => {
           </v-carousel-item>
         </v-carousel>
     </div>
-      
-    <v-skeleton-loader v-else width="100%" height="100%" class="rounded-0"></v-skeleton-loader>
-
   </div>
 </template>
 

@@ -4,7 +4,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useRoute } from "vue-router";
 import { useDateFormat, useObjectsEqual } from "@/components/composable"
 import { db, adminValidationRules } from "@/components/mixins";
-import { UIBreadcrumbs } from "@/components/ui/index.js";
+import { UIBreadcrumbs } from "@/components/ui";
 
 let userFirebaseData = {}
 const rules = adminValidationRules()

@@ -12,12 +12,13 @@ const backgroundSwitch = ref(false)
 const route = useRoute()
 
 onMounted(() => {
+  storage.switchPreloader()
   getBackground()
   useScrollLock(true)
 })
 
 watch(() => route.fullPath, () => {
-    storage.preloader = true
+    storage.switchPreloader()
     useScrollLock(true)
   }
 );

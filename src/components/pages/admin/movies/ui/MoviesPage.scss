@@ -1,0 +1,20 @@
+.movies{
+    &__title{
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    &__table {
+        max-width: calc(100vw - 40px);
+        overflow: hidden;
+        
+        .v-data-table__td {
+          justify-content: center;
+        }
+    }
+
+    &__btn {
+    display: flex;
+    justify-content: center;
+    }
+}

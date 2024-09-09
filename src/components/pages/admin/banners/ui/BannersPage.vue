@@ -230,34 +230,39 @@ function generateUniqueId() {
 
 <template>
 <div class="banners-page">  
-  <BackgroundSection
-    @setData="setBackground" 
-    @delete="deleteBackground"
-    :data="backgroundData"
-    title="Задній фон сайту"
-  />
 
-  <BannersSection
-    @delete="delBannerTop"  
-    @addBanner="abbBannerTop" 
-    @changeBanner="changeBannersTop" 
-    @changeData="(data) => setBannersData('top', data)"
-    :data="topBannersData"
-    :quantity="topQuantityBanners" 
-    :bannerData="topBannersRef" 
-    title="Верхні баннери"
-  />
+  <h1 class="banners-page__title">Баннери</h1>
 
-  <BannersSection
-    @delete="delBannerBottom"  
-    @addBanner="abbBannerBottom" 
-    @changeBanner="changeBannersBottom" 
-    @changeData="(data) => setBannersData('bottom', data)"
-    :data="bottomBannersData"
-    :quantity="bottomQuantityBanners" 
-    :bannerData="bottomBannersRef" 
-    title="Акції та новини"
-  />
+  <section class="banners-page__main">
+    <BackgroundSection
+      @setData="setBackground" 
+      @delete="deleteBackground"
+      :data="backgroundData"
+      title="Задній фон сайту"
+    />
+
+    <BannersSection
+      @delete="delBannerTop"  
+      @addBanner="abbBannerTop" 
+      @changeBanner="changeBannersTop" 
+      @changeData="(data) => setBannersData('top', data)"
+      :data="topBannersData"
+      :quantity="topQuantityBanners" 
+      :bannerData="topBannersRef" 
+      title="Верхні баннери"
+    />
+
+    <BannersSection
+      @delete="delBannerBottom"  
+      @addBanner="abbBannerBottom" 
+      @changeBanner="changeBannersBottom" 
+      @changeData="(data) => setBannersData('bottom', data)"
+      :data="bottomBannersData"
+      :quantity="bottomQuantityBanners" 
+      :bannerData="bottomBannersRef" 
+      title="Акції та новини"
+    />
+  </section>
 </div>
 </template>
 

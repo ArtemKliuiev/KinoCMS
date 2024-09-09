@@ -11,6 +11,7 @@ const bottomBannersData = ref(false)
 const bottomBanners = ref([])
 
 onMounted(() => {
+  storage.switchPreloader()
   getBannersData()
 })
 
@@ -29,7 +30,7 @@ async function getBannersData(){
   bottomBannersData.value = allData.dataBanners.bottom
   bottomBanners.value = allData.banners.bottom
 
-  storage.preloader = false
+  storage.switchPreloader(false)
 }
 
 

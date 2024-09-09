@@ -1,5 +1,5 @@
 <template>
-  AdminCinemasPage
+
 </template>
 
 <script setup>

@@ -101,7 +101,7 @@ function navigateToPage(uid) {
           <template class="v-data-table-column--align-center" v-slot:[`item.edit`]="{ item }">
 
             <div class="users__btn">
-              <v-btn class="users__btn" color="#2a2a2a" @click="navigateToPage(item.edit)">Редагувати</v-btn>
+              <v-btn color="#2a2a2a" @click="navigateToPage(item.edit)">Редагувати</v-btn>
             </div>
           </template>
         </v-data-table>
