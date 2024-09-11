@@ -17,7 +17,7 @@ onMounted(() => {
   useScrollLock(true)
 })
 
-watch(() => route.fullPath, () => {
+watch(() => route.name, () => {
     storage.switchPreloader()
     useScrollLock(true)
   }

@@ -1,0 +1,52 @@
+@import '@/assets/styles/styles';
+
+.movie-card{
+  position: relative;
+  overflow: hidden;
+  padding: 7px;
+  background-color: $grayOne;
+  border-radius: 5px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 300ms ease;
+
+  &__image{
+    aspect-ratio: 1/1;
+    padding: 2px;
+    margin-bottom: 10px;
+    transition: padding 300ms ease;
+  }
+
+  &__title{
+    line-height: 30px;
+    text-transform: uppercase;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+
+    @include media-breakpoint-down(sm) {
+      font-size: 1em;
+    }
+  }
+
+  &__chips{
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  &:hover{
+    @include media-breakpoint-up(md) {
+      background-color: $grayTwo;
+
+      .movie-card__image{
+        padding: 0;
+      }
+    }
+  }
+}

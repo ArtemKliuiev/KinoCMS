@@ -25,6 +25,12 @@
     "forAdmin": "Для адміністратора"
   },
   "pages": {
+    "main": {
+      "curTitle": "Зараз в кіно",
+      "nextTitle": "Скоро в кіно",
+      "newsTitle": "Новини і акції",
+      "phone": "Телефон"
+    },
     "registration": {
       "mainTitle": "Реєстрація",
       "name": "Ім'я",

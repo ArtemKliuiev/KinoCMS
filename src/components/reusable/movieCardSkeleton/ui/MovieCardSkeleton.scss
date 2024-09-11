@@ -1,0 +1,19 @@
+@import '@/assets/styles/styles';
+
+.card-skeleton{
+  padding: 7px;
+  background-color: $grayOne;
+  border-radius: 5px;
+  cursor: pointer;
+  user-select: none;
+
+  &__image{
+    aspect-ratio: 1/1;
+    padding: 2px;
+    margin-bottom: 10px;
+  }
+
+  &__title{
+    height: 30px;
+  }
+}

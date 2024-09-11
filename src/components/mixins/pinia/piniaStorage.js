@@ -1,24 +1,22 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-export const piniaStorage = defineStore('counter', () => {
+export const piniaStorage = defineStore('preload', () => {
     const preloader = ref(true)
 
     function switchPreloader(switchInfo = true){
-
+        console.log('pre')
         if(switchInfo){
             preloader.value = true
 
             setTimeout(() => {
                 preloader.value = false
-            }, 1000)
+            }, 10000)
         }else{
             preloader.value = false
         }
 
-        console.log(123)
         return preloader.value
-        
     }
   
     return { switchPreloader, preloader }

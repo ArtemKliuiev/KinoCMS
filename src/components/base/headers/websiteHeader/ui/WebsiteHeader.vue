@@ -27,9 +27,9 @@ onMounted(() => {
 
 const supportedLocales = Tr.supportedLocales
 
-const switchLanguage = async (event) => { // <--- 1
-  const newLocale = event.target.value // <--- 2
-  await Tr.switchLanguage(newLocale) // <--- 3
+const switchLanguage = async (event) => {
+  const newLocale = event.target.value
+  await Tr.switchLanguage(newLocale)
 }
 
 

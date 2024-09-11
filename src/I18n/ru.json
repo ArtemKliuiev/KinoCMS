@@ -25,6 +25,12 @@
     "forAdmin": "Для администратора"
   },
   "pages": {
+    "main": {
+      "curTitle": "Сейчас в кино",
+      "nextTitle": "Скоро в кино",
+      "newsTitle": "Новости и акции",
+      "phone": "Телефон"
+    },
     "registration": {
       "mainTitle": "Регистрация",
       "name": "Имя",
