@@ -11,11 +11,8 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { Tr } from "@/I18n/index.js";
 
 
-const { t, locale, availableLocales } = useI18n()
-console.log(availableLocales)
+const { t, locale} = useI18n()
 const auth = getAuth();
-const { setQueryParam } = useUrlQuery()
-const route = useRoute();
 const router = useRouter()
 const burger = ref(false)
 const dropdownTitle = locale.value
@@ -25,13 +22,10 @@ onMounted(() => {
   checkAuth()
 })
 
-const supportedLocales = Tr.supportedLocales
-
 const switchLanguage = async (event) => {
   const newLocale = event.target.value
   await Tr.switchLanguage(newLocale)
 }
-
 
 function checkAuth() {
   onAuthStateChanged(auth, (user) => {
@@ -49,9 +43,7 @@ async function changeLang(e) {
   if (e === 'ua') {
     lang = 'uk'
   }
-  // locale.value = lang
-  // router.replace({ query: { lang: lang } })
-  // setQueryParam("lang", lang)
+
   await Tr.switchLanguage(lang)
 
   try {

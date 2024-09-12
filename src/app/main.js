@@ -14,11 +14,7 @@ import { uk, ru } from 'vuetify/locale'
 
 const { getLocalStorage } = useLocalStorage()
 
-
 const langParam = getLocalStorage('locale')
-console.log(langParam)
-
-
 
 const vuetify = createVuetify({
   components,

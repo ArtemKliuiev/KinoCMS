@@ -5,7 +5,6 @@ export const piniaStorage = defineStore('preload', () => {
     const preloader = ref(true)
 
     function switchPreloader(switchInfo = true){
-        console.log('pre')
         if(switchInfo){
             preloader.value = true
 

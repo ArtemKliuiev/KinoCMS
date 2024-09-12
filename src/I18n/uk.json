@@ -31,6 +31,13 @@
       "newsTitle": "Новини і акції",
       "phone": "Телефон"
     },
+    "poster": {
+      "select": {
+        "titleOne": "Зараз в кіно",
+        "titleTwo": "Скоро в кіно"
+      },
+      "btn": "Завантажити ще"
+    },
     "registration": {
       "mainTitle": "Реєстрація",
       "name": "Ім'я",

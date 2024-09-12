@@ -5,6 +5,7 @@ import { doc, getDoc, setDoc, updateDoc, arrayUnion, getFirestore, collection, a
 import { ImagesSection } from '@/components/reusable';
 import { db } from "@/components/mixins";
 import { UIBreadcrumbs } from "@/components/ui";
+import { v4 as uuidv4 } from 'uuid';
 
 
 const topBannersRef = ref([])
@@ -47,13 +48,14 @@ async function getBannersData(){
 
 const date1 = new Date('2024-09-01');
 const date2 = new Date('2024-09-18');
+let counter = ref(0)
 
 const movie = ref({
   name: {
-    uk: 'Назва фільму',
-    ru: 'Название фильма'
+    uk: 'Назва фільму' ,
+    ru: 'Название фильма' 
   },
-  date: date2.getTime(),
+  date: date1.getTime(),
   age: "18",
   genre: "comedy",
   type: "3d",
@@ -66,12 +68,18 @@ const movie = ref({
 });
 
 async function addMovie() {
-  try {
-    await addDoc(collection(db, "movies"), movie.value);
-    console.log("Фильм добавлен!");
-  } catch (e) {
-    console.error("Ошибка добавления документа: ", e);
-  }
+  counter.value = counter.value + 1
+  const uid = uuidv4()
+  movie.value.uid = uid
+  movie.value.name = {
+    uk: 'Назва фільму ' + counter.value,
+    ru: 'Название фильма ' + counter.value
+  },
+
+  console.log(movie.value.name)
+  
+
+  await setDoc(doc(db, "movies", uid), movie.value);
 }
 
 onMounted(() => {

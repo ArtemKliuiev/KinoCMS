@@ -1,0 +1,38 @@
+@import '@/assets/styles/styles';
+
+// @include media-breakpoint-down(sm) {
+
+// }
+
+.poster-page{
+    margin-top: 10px;
+
+    &__select{
+        max-width: 25%;
+    }
+
+    &__cards{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 30px;
+    
+        @include media-breakpoint-down(md) {
+          grid-template-columns: 1fr 1fr 1fr;
+        }
+    
+        @include media-breakpoint-down(sm) {
+          grid-template-columns: 1fr 1fr;
+        }
+    
+        @include media-breakpoint-down(xs) {
+          grid-template-columns: 1fr;
+        }
+    }
+
+    &__btn{
+        max-width: 500px;
+        height: 36px;
+        margin: 0 auto 20px;
+    }
+}

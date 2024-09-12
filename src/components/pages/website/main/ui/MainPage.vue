@@ -15,7 +15,6 @@ const currentMovies = ref([])
 const nextMovies = ref([])
 
 onMounted(() => {
-  storage.switchPreloader()
   getBanners()
   getMovies()
 })
@@ -56,8 +55,6 @@ async function getMovies(){
       nextMovies.value.push(doc.data())
     }
   });
-
-  console.log(currentMovies.value, nextMovies.value)
 }
 
 
