@@ -28,6 +28,7 @@ import {
   PosterPage,
   SchedulePage,
   SoonPage,
+  MoviePage,
   СinemasPage,
   ProfilePage,
   PromotionsPage,
@@ -63,6 +64,11 @@ export const routes = [
         path: 'poster',
         name: 'poster',
         component: PosterPage
+      },
+      {
+        path: 'movie/:uid',
+        name: 'movie',
+        component: MoviePage
       },
       {
         path: 'schedule',

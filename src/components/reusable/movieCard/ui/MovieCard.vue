@@ -1,16 +1,16 @@
 <script setup>
 import {BaseButtonText, BasePicture} from "@/components/base/index.js";
-import {computed, ref} from "vue";
 import { useI18n } from 'vue-i18n'
+import {Tr} from "@/I18n/index.js";
 
 const { locale } = useI18n()
 const props = defineProps(['data'])
-
-
+const localizedRoute = Tr.i18nRoute({ name: 'movie', params: { uid: props.data.uid}})
 </script>
 
 <template>
 <div class="movie-card">
+  <BaseButtonText :to="localizedRoute">
     <div class="movie-card__image">
       <BasePicture :src="data.images[0]"/>
     </div>
@@ -23,6 +23,7 @@ const props = defineProps(['data'])
       <v-chip variant="flat" color="#388e3c">{{ data.age }} +</v-chip>
       <v-chip v-if="data.type === '3d'" variant="flat" color="#1976d2">3D</v-chip>
     </div>
+  </BaseButtonText>
 </div>
 </template>
 

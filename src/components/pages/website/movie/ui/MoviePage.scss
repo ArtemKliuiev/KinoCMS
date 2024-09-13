@@ -1,0 +1,67 @@
+@import '@/assets/styles/styles';
+
+.movie-page{
+
+  &__main{
+    margin: 10px 0;
+    display: flex;
+    gap: 6%;
+
+    @include media-breakpoint-down(md) {
+      display: block;
+    }
+  }
+
+  &__picture{
+    flex: 1 0 47%;
+    aspect-ratio: 1.5/1;
+  }
+
+  &__main-info{
+    flex: 1 0 47%;
+
+    @include media-breakpoint-down(md) {
+      margin: 0 5vw;
+    }
+
+    @include media-breakpoint-down(xxs) {
+      margin: 0;
+    }
+
+    ul{
+      padding: 10px;
+
+      @include media-breakpoint-down(md) {
+        padding: 15px 20px;
+      }
+
+      @include media-breakpoint-down(xxs) {
+        padding: 10px;
+      }
+    }
+
+    li{
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      font-size: 1.1em;
+      margin-bottom: 10px;
+    }
+
+  }
+
+  &__title{
+    margin: 0 0 40px;
+    font-size: 2em;
+
+    @include media-breakpoint-down(md) {
+      margin: 20px 0;
+      text-align: center;
+    }
+  }
+
+  &__info{
+    background-color: red;
+  }
+}
