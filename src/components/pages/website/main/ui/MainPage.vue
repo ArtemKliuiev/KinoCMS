@@ -37,7 +37,7 @@ async function getBanners(){
 }
 
 async function getMovies(){
-  const curData = new Date()
+  const curData = new Date('2024-09-12')
   const qCurMovies = query(collection(db, "movies"), where("date", "<", curData.getTime()));
   const qNextMovies = query(collection(db, "movies"), where("date", ">", curData.getTime()));
 
