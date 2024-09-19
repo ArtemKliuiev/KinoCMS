@@ -1,9 +1,32 @@
 @import '@/assets/styles/styles';
 
 .movie-page{
+  margin: 10px 0;
 
-  &__main{
-    margin: 10px 0;
+  &__trailer{
+    width: 100%;
+    aspect-ratio: 2/1;
+    margin-bottom: 5px;
+
+    @include media-breakpoint-down(md) {
+      aspect-ratio: 1.5/1;
+    }
+  }
+
+  &__schedule{
+    &-title{
+      margin-bottom: 10px;
+    }
+
+    &-select{
+      display: flex;
+      justify-content: flex-end;
+    }
+
+  }
+
+  &__info{
+    margin-bottom: 15px;
     display: flex;
     gap: 6%;
 
@@ -19,6 +42,7 @@
 
   &__main-info{
     flex: 1 0 47%;
+    margin-bottom: 10px;
 
     @include media-breakpoint-down(md) {
       margin: 0 5vw;
@@ -52,7 +76,7 @@
   }
 
   &__title{
-    margin: 0 0 40px;
+    margin: 0 0 20px;
     font-size: 2em;
 
     @include media-breakpoint-down(md) {
@@ -61,7 +85,17 @@
     }
   }
 
-  &__info{
-    background-color: red;
+  &__description{
+    padding: 10px;
+    margin-bottom: 15px;
+  }
+
+  &__slider{
+    width: 100%;
+    aspect-ratio: 2/1;
+
+    @include media-breakpoint-down(md) {
+      aspect-ratio: 1.5/1;
+    }
   }
 }
